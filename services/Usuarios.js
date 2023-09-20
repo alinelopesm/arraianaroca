@@ -1,8 +1,8 @@
 import  {Api} from './Api'
 
-const endPoint = 'recipe'
+const endPoint = 'usuarios'
 
-export const ReceitasService = {
+export const UsuarioService = {
     get(id){
         return Api.get(`${endPoint}?id=${id}`)
     },
@@ -15,5 +15,4 @@ export const ReceitasService = {
     remove(id){
         return Api.get(`${endPoint}?id=${id}`)
     }
-
 }
