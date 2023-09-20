@@ -1,4 +1,4 @@
-const url = 'http://localhost:8000/un_medida'
+const url = 'http://localhost:8000/'
 export const Api = {
     get(endPoint){
         return fetch(`${url}${endPoint}`).then(response => response.json())
