@@ -1,6 +1,6 @@
 import Head from "next/head"
 import { useEffect, useState } from "react"
-import { UsuarioService } from "../../services/Usuarios"
+import { UsuarioService } from "../../services/Usuario"
 import { List, ListItem } from "@mui/material"
 
 export default function Usuario() {
@@ -15,7 +15,6 @@ export default function Usuario() {
     getUsuarios()
   })
 
-  console.log('Sou lista', listaUsuarios)
   return (
     <div>
       <Head>

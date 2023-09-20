@@ -9,8 +9,8 @@ export const UsuarioService = {
     listAll(){
         return Api.get(endPoint)
     },
-    create(novaReceita){
-        return Api.get(endPoint, novaReceita)
+    create(novoUsuario){
+        return Api.get(endPoint, novoUsuario)
     },
     remove(id){
         return Api.get(`${endPoint}?id=${id}`)
