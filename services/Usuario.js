@@ -10,7 +10,7 @@ export const UsuarioService = {
         return Api.get(endPoint)
     },
     create(novoUsuario){
-        return Api.get(endPoint, novoUsuario)
+        return Api.post(endPoint, novoUsuario)
     },
     remove(id){
         return Api.get(`${endPoint}?id=${id}`)

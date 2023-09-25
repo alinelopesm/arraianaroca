@@ -18,14 +18,14 @@ export default function Ingredientes() {
   return (
     <div>
       <Head>
-      <title>Categorias</title>
+      <title>Ingredientes</title>
       </Head>
 
-      Lista Categorias:
+      Lista Ingredientes:
       <List>
         {listaIngredientes.map((ingrediente) => {
           return <ListItem key={ingrediente.cod_ingrediente}>
-            {categoria.nome}
+            {ingrediente.nome}
           </ListItem>
         })}
       </List>
