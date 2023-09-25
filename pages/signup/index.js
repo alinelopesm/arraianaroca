@@ -5,6 +5,7 @@ import {
   Input,
   Select,
 } from 'antd';
+import { UsuarioService } from "../../services/Usuario"
 
 const formItemLayout = {
   labelCol: {
@@ -41,6 +42,7 @@ const SignUp = () => {
   const onFinish = async (values) => {
     
     delete values['confirm-senha']
+    const cadastroUser = await UsuarioService.create(values)
     
   };
   
