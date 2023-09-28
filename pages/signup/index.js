@@ -39,11 +39,10 @@ const tailFormItemLayout = {
 };
 const SignUp = () => {
   const [form] = Form.useForm();
+
   const onFinish = async (values) => {
-    
     delete values['confirm-senha']
     const cadastroUser = await UsuarioService.create(values)
-    
   };
   
   return (

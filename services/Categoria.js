@@ -10,7 +10,11 @@ export const CategoriaService = {
         return Api.get(endPoint)
     },
     create(novaCategoria){
-        return Api.get(endPoint, novaCategoria)
+        const payload = {
+            nome: novaCategoria?.nome,
+            foto_categoria: novaCategoria?.filePath
+        }
+        return Api.post(endPoint, payload)
     },
     remove(id){
         return Api.get(`${endPoint}?id=${id}`)
