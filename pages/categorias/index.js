@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { CategoriaService } from "../../services/Categoria"
 import { List, ListItem } from "@mui/material"
 import { Image } from 'antd';
+import convertImage64 from '../../helpers/convertImage64'
 
 export default function Categorias() {
   const [listaCategorias, setListaCategorias] = useState([])
@@ -15,11 +16,6 @@ export default function Categorias() {
     getCategorias()
   })
 
-  function convertImage(imageArrayFromDatabase) {
-    const base64ImageFromDatabase = imageArrayFromDatabase.data.map(byte => String.fromCharCode(byte)).join("");
-    return `${base64ImageFromDatabase}`
-  }
-
   return (
     <div>
       <Head>
@@ -29,7 +25,7 @@ export default function Categorias() {
       Lista Categorias:
       <List>
         {listaCategorias.map((categoria) => {
-          const imagePath = categoria?.foto_categoria ? convertImage(categoria?.foto_categoria) : ''
+          const imagePath = categoria?.foto_categoria ? convertImage64(categoria?.foto_categoria) : ''
           return <>
           <ListItem key={categoria.cod_categoria}>
             nome={categoria.nome}<br/>
