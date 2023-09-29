@@ -1,7 +1,10 @@
-import Head from "next/head"
 import { useEffect, useState } from "react"
+import PageContent from "../../componentes/PageContent/PageContent"
 import { UsuarioService } from "../../services/Usuario"
 import { List, ListItem } from "@mui/material"
+
+const PAGE_NAME = 'Listagem de usuários'
+const HEAD_NAME = 'Usuário'
 
 export default function Usuario() {
   const [listaUsuarios, setListaUsuarios] = useState([])
@@ -16,12 +19,7 @@ export default function Usuario() {
   })
 
   return (
-    <div>
-      <Head>
-      <title>Usuario</title>
-      </Head>
-
-      Lista de Usuarios:
+    <PageContent pageName={PAGE_NAME} headName={HEAD_NAME}>
       <List>
         {listaUsuarios.map((usuario) => {
           return <ListItem key={usuario.cod_usuario}>
@@ -29,7 +27,7 @@ export default function Usuario() {
           </ListItem>
         })}
       </List>
-    </div>
+    </PageContent>
   )
 }
 

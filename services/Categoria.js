@@ -4,7 +4,7 @@ const endPoint = 'categorias'
 
 export const CategoriaService = {
     get(id){
-        return Api.get(`${endPoint}?id=${id}`)
+        return Api.getById(endPoint, id)
     },
     listAll(){
         return Api.get(endPoint)
@@ -15,6 +15,13 @@ export const CategoriaService = {
             foto_categoria: novaCategoria?.filePath
         }
         return Api.post(endPoint, payload)
+    },
+    update(updateCategoria, id){
+        const payload = {
+            nome: updateCategoria?.nome,
+            foto_categoria: novaCategoria?.filePath
+        }
+        return Api.post(endPoint, payload, id)
     },
     remove(id){
         return Api.get(`${endPoint}?id=${id}`)

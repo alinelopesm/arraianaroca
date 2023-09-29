@@ -7,7 +7,7 @@ import { Layout, Button, theme } from 'antd';
 
 
 const { Header } = Layout;
-const HeaderScreen = ({collapsed, setCollapsedCallback}) => {
+const HeaderScreen = ({collapsed, setCollapsedCallback, pageName}) => {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -28,6 +28,8 @@ const HeaderScreen = ({collapsed, setCollapsedCallback}) => {
         height: 64,
       }}
       />
+      {pageName || ''}
+
     </Header>
   );
 };

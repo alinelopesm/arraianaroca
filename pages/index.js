@@ -1,38 +1,15 @@
-// import Head from "next/head"
-import React, { useState } from 'react';
-import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-} from '@ant-design/icons';
-import { Layout, Button, theme } from 'antd';
-import SideBar from '../componentes/SideBar/SideBar'
-import HeaderScreen from '../componentes/Header/Header'
+import React from 'react';
+import PageContent from '../componentes/PageContent/PageContent';
 
+const PAGE_NAME = 'Home'
 
-const { Content } = Layout;
-const Home = () => {
-  const [collapsed, setCollapsed] = useState(false);
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
-
+const Home = ({ Component, pageProps }) => {
 
   return (
-    <Layout>
-      <SideBar collapsed={collapsed} />
-      <Layout>
-        <HeaderScreen collapsed={collapsed} setCollapsedCallback={(value) => setCollapsed(value)} />
-        <Content
-          style={{
-            margin: '24px 16px',
-            padding: 24,
-            minHeight: 600,
-            background: colorBgContainer,
-          }}
-        >
-        </Content>
-      </Layout>
-    </Layout>
+    <PageContent pageProps={pageProps} pageName={PAGE_NAME}>
+      <h1>{PAGE_NAME}</h1>
+    </PageContent>
   );
 };
+
 export default Home;

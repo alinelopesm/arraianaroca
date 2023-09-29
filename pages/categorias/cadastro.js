@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import PageContent from '../../componentes/PageContent/PageContent';
 import { InboxOutlined } from '@ant-design/icons';
 import {
   Button,
@@ -6,9 +7,15 @@ import {
   Space,
   Upload,
   Input,
-  message
+  message,
+  Image
 } from 'antd';
 import { CategoriaService } from "../../services/Categoria"
+
+const PAGE_NAME = 'Listagem de Categorias'
+const HEAD_NAME = 'Categorias'
+
+const method = 'editar'
 
 const formItemLayout = {
   labelCol: {
@@ -36,88 +43,109 @@ const normFile = (e) => {
   return e?.fileList;
 };
 
-const props = {
-  name: 'file',
-  multiple: false,
-  accept: 'image/*',
-  onChange(info) {
-    const { status } = info.file;
-    if (status !== 'uploading') {
-      console.log(info.file, info.fileList);
-    }
-    if (status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully.`);
-    } else if (status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-  onDrop(e) {
-    console.log('Dropped files', e.dataTransfer.files);
-  },
-};
-
-const cadastroCategoria = () => {
+const CadastroCategoria = (props) => {
+  const { categoria } = props;
+  console.log('sou props', categoria);
   const [form] = Form.useForm();
+  const [imagePreview, setImagePreview] = useState()
+  const [categoriaFrom, setCategoriaFrom] = useState(categoria || {})
+
+  console.log('Sou inicio', form);
+
+  const propsForm = {
+    name: 'file',
+    multiple: false,
+    accept: 'image/*',
+    imagePreview: {imagePreview},
+    onChange(info) {
+      const { status } = info.file;
+      if (status !== 'uploading') {
+        console.log(info.file, info.fileList);
+      }
+      if (status === 'done') {
+        message.success(`${info.file.name} file uploaded successfully.`);
+        console.log('como estou', info);
+        setImagePreview(imagePath= `${info.file.thumbUrl}`)
+      } else if (status === 'error') {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+  
+    },
+    onDrop(e) {
+      console.log('Dropped files', e.dataTransfer.files);
+    },
+  };
 
   const onFinish = async (values) => {
     const file = values?.dragger[0].thumbUrl;
-    let categoria = {
+    setImagePreview(`${file}`)
+    let payload = {
       nome: values?.nome,
-      filePath: `${file}`,
+      foto_categoria: `${file}`,
     };
 
-    const cadastroCategoria = await CategoriaService.create(categoria);
+    const cadastroCategoria = await CategoriaService.create(payload);
   };
   
   return (
-    <Form
-      name="validate_other"
-      {...formItemLayout}
-      onFinish={onFinish}
-      style={{
-        maxWidth: 600,
-      }}
-    >
-      <Form.Item
-        name="nome"
-        label="Nome"
-        tooltip="Como você quer que os outros te chamem?"
-        rules={[
-          {
-            required: true,
-            message: 'Por favor, insira seu nome!',
-            whitespace: true,
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item label="Dragger">
-        <Form.Item name="dragger" valuePropName="fileList" getValueFromEvent={normFile} noStyle>
-          <Upload.Dragger {...props} name="files" listType="picture">
-            <p className="ant-upload-drag-icon">
-              <InboxOutlined /> 
-            </p>
-            <p className="ant-upload-text">Click or drag file to this area to upload</p>
-            <p className="ant-upload-hint">Support for a single or bulk upload.</p>
-          </Upload.Dragger>
-        </Form.Item>
-      </Form.Item>
-
-      <Form.Item
-        wrapperCol={{
-          span: 12,
-          offset: 6,
+    <PageContent headName={HEAD_NAME} pageName={PAGE_NAME}>
+      <Form
+        name="validate_other"
+        {...formItemLayout}
+        onFinish={onFinish}
+        style={{
+          maxWidth: 600,
         }}
       >
-        <Space>
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
-          <Button htmlType="reset">reset</Button>
-        </Space>
-      </Form.Item>
-    </Form>
+        <Form.Item
+          name="nome"
+          label="Nome"
+          initialValue={categoriaFrom.nome || ''}
+          tooltip="Como você quer que os outros te chamem?"
+          rules={[
+            {
+              required: true,
+              message: 'Por favor, insira seu nome!',
+              whitespace: true,
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item label='ImagePreview'>
+          <Image
+            width={200}
+            src={imagePreview}
+          />
+        </Form.Item>
+
+        <Form.Item label="Dragger">
+          <Form.Item name="dragger" valuePropName="fileList" getValueFromEvent={normFile} noStyle>
+            <Upload.Dragger props={propsForm} name="files" listType="picture">
+              <p className="ant-upload-drag-icon">
+                <InboxOutlined /> 
+              </p>
+              <p className="ant-upload-text">Click or drag file to this area to upload</p>
+              <p className="ant-upload-hint">Support for a single or bulk upload.</p>
+            </Upload.Dragger>
+          </Form.Item>
+        </Form.Item>
+
+        <Form.Item
+          wrapperCol={{
+            span: 12,
+            offset: 6,
+          }}
+        >
+          <Space>
+            <Button htmlType="submit" style={{background: '#1677ff', color: 'white'}}>
+              Submit
+            </Button>
+            <Button type='' htmlType="reset">reset</Button>
+          </Space>
+        </Form.Item>
+      </Form>
+    </PageContent>
   );
 };
-export default cadastroCategoria;
+export default CadastroCategoria;

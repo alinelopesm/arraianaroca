@@ -1,7 +1,10 @@
-import Head from "next/head"
 import { useEffect, useState } from "react"
+import PageContent from "../../componentes/PageContent/PageContent"
 import { MedidaService } from "../../services/Medida"
 import { List, ListItem } from "@mui/material"
+
+const PAGE_NAME = 'Listagem de Unidade de Medidas:'
+const HEAD_NAME = 'Unidade de Medidas'
 
 export default function Medidas() {
   const [listaMedidas, setListaMedidas] = useState([])
@@ -16,12 +19,7 @@ export default function Medidas() {
   })
 
   return (
-    <div>
-      <Head>
-      <title>Unidade de Medidas</title>
-      </Head>
-
-      Lista Unidade de Medidas:
+    <PageContent headName={HEAD_NAME} pageName={PAGE_NAME}>
       <List>
         {listaMedidas.map((medida) => {
           return <ListItem key={medida.cod_un_medida}>
@@ -29,7 +27,7 @@ export default function Medidas() {
           </ListItem>
         })}
       </List>
-    </div>
+    </PageContent>
   )
 }
 
