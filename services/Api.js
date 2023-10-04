@@ -13,7 +13,15 @@ export const Api = {
                 'content-type': 'application/json'
             },
             body: JSON.stringify(data)
-        }).then(response => response.json())
+        }).then(response => { 
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
     },
     put(endPoint, data, id){
         return fetch(`${url}${endPoint}/${id}`, {
@@ -22,11 +30,24 @@ export const Api = {
                 'content-type': 'application/json'
             },
             body: JSON.stringify(data)
-        }).then(response => response.json())
+        }).then(response => { 
+            return response.json();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
     },
     delete(endPoint){
         return fetch(`${url}${endPoint}`, {
             method: 'DELETE',
-        }).then(response => response.json())
+        }).then(response => { 
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
     }
 }

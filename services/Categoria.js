@@ -9,19 +9,11 @@ export const CategoriaService = {
     listAll(){
         return Api.get(endPoint)
     },
-    create(novaCategoria){
-        const payload = {
-            nome: novaCategoria?.nome,
-            foto_categoria: novaCategoria?.filePath
-        }
+    create(payload){
         return Api.post(endPoint, payload)
     },
-    update(updateCategoria, id){
-        const payload = {
-            nome: updateCategoria?.nome,
-            foto_categoria: novaCategoria?.filePath
-        }
-        return Api.post(endPoint, payload, id)
+    update(payload, id){
+        return Api.put(endPoint, payload, id)
     },
     remove(id){
         return Api.get(`${endPoint}?id=${id}`)

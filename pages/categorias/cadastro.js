@@ -11,9 +11,9 @@ import {
   Image
 } from 'antd';
 import { CategoriaService } from "../../services/Categoria"
-import convertImage64 from '../../helpers/convertImage64'
+import { useRouter } from "next/router";
 
-const PAGE_NAME = 'Listagem de Categorias'
+const PAGE_NAME = 'Cadastro de Categorias'
 const HEAD_NAME = 'Categorias'
 
 const method = 'editar'
@@ -45,7 +45,7 @@ const normFile = (e) => {
 };
 
 const CadastroCategoria = ({categoriaData}) => {
-
+  const router = useRouter();
   const [form] = Form.useForm();
   const [categoriaForm, setCategoriaForm] = useState(categoriaData)
 
@@ -53,7 +53,7 @@ const CadastroCategoria = ({categoriaData}) => {
     name: 'file',
     multiple: false,
     accept: 'image/*',
-    imagePreview: categoriaForm.imagePreview,
+    imagePreview: categoriaForm?.imagePreview,
     onChange(info) {
       const { status } = info.file;
       if (status !== 'uploading') {
@@ -74,14 +74,26 @@ const CadastroCategoria = ({categoriaData}) => {
   };
 
   const onFinish = async (values) => {
-    const file = values?.dragger[0].thumbUrl;
-    setImagePreview(`${file}`)
+    const file = values?.dragger?.length > 0 && values?.dragger[0]?.thumbUrl || '';
+    const imagePreview = `${file}`
+
     let payload = {
       nome: values?.nome,
-      foto_categoria: `${file}`,
+      foto_categoria: imagePreview,
     };
 
+    if(categoriaData?.codCategoria) {
+      const id = categoriaData?.codCategoria
+      const edicaoCategoria = await CategoriaService.update(payload, id);
+      console.log('fui alterar', edicaoCategoria);
+
+      if (edicaoCategoria) router.push('/categorias')
+      return
+    }
+    console.log('indo', payload);
+
     const cadastroCategoria = await CategoriaService.create(payload);
+    router.push('/categorias')
   };
   
   return (
@@ -97,7 +109,7 @@ const CadastroCategoria = ({categoriaData}) => {
         <Form.Item
           name="nome"
           label="Nome"
-          initialValue={categoriaForm.nome || ''}
+          initialValue={categoriaForm?.nome || ''}
           tooltip="Como você quer que os outros te chamem?"
           rules={[
             {
@@ -112,7 +124,7 @@ const CadastroCategoria = ({categoriaData}) => {
         <Form.Item label='ImagePreview'>
           <Image
             width={200}
-            src={categoriaForm.imagePreview}
+            src={categoriaForm?.imagePreview}
           />
         </Form.Item>
 

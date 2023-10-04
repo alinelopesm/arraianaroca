@@ -1,18 +1,15 @@
-import Head from "next/head";
 import { useEffect, useState } from "react";
 import PageContent from "../../componentes/PageContent/PageContent";
 import { CategoriaService } from "../../services/Categoria";
 import { Row, Col, Button, Card, Avatar } from "antd";
 import {
   EditOutlined,
-  SettingOutlined,
-  EllipsisOutlined,
   PictureOutlined,
 } from "@ant-design/icons";
 import convertImage64 from '../../helpers/convertImage64';
 import { useRouter } from "next/router";
 
-const user = 'a'
+const user = 'admin'
 const PAGE_NAME = 'Listagem de Categorias'
 const HEAD_NAME = 'Categorias'
 
@@ -31,12 +28,12 @@ export default function Categorias() {
   return (
     <PageContent headName={HEAD_NAME} pageName={PAGE_NAME}>
       <Button
-        style={{ position: 'fixed', bottom: '20px', right: '20px' }}
+        style={{ position: 'fixed', right: '40px' }}
         onClick={() => router.push('/categorias/cadastro')}
       >
         Cadastrar Nova Categoria
       </Button>
-      <Row gutter={16} style={{ marginTop: '20px' }}>
+      <Row gutter={16} style={{ marginTop: '48px' }}>
         {listaCategorias.map((categoria) => {
           const imagePath = categoria?.foto_categoria ? convertImage64(categoria?.foto_categoria) : '';
           return (
@@ -45,12 +42,10 @@ export default function Categorias() {
                 xs={12} sm={8} md={6} lg={4}
                 style={{ marginBottom: '20px', width: '100%', height: '95%' }}
                 actions={user.includes('admin') && [
-                  <SettingOutlined key="setting" />,
                   <EditOutlined
                     key="edit"
                     onClick={() => router.push(`/categorias/${categoria.cod_categoria}`)}
                   />,
-                  <EllipsisOutlined key="ellipsis" />,
                 ]}
               >
                 <div style={{ maxWidth: '100%', maxHeight: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
