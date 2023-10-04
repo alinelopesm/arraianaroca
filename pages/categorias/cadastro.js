@@ -11,6 +11,7 @@ import {
   Image
 } from 'antd';
 import { CategoriaService } from "../../services/Categoria"
+import convertImage64 from '../../helpers/convertImage64'
 
 const PAGE_NAME = 'Listagem de Categorias'
 const HEAD_NAME = 'Categorias'
@@ -43,20 +44,16 @@ const normFile = (e) => {
   return e?.fileList;
 };
 
-const CadastroCategoria = (props) => {
-  const { categoria } = props;
-  console.log('sou props', categoria);
-  const [form] = Form.useForm();
-  const [imagePreview, setImagePreview] = useState()
-  const [categoriaFrom, setCategoriaFrom] = useState(categoria || {})
+const CadastroCategoria = ({categoriaData}) => {
 
-  console.log('Sou inicio', form);
+  const [form] = Form.useForm();
+  const [categoriaForm, setCategoriaForm] = useState(categoriaData)
 
   const propsForm = {
     name: 'file',
     multiple: false,
     accept: 'image/*',
-    imagePreview: {imagePreview},
+    imagePreview: categoriaForm.imagePreview,
     onChange(info) {
       const { status } = info.file;
       if (status !== 'uploading') {
@@ -100,7 +97,7 @@ const CadastroCategoria = (props) => {
         <Form.Item
           name="nome"
           label="Nome"
-          initialValue={categoriaFrom.nome || ''}
+          initialValue={categoriaForm.nome || ''}
           tooltip="Como você quer que os outros te chamem?"
           rules={[
             {
@@ -115,7 +112,7 @@ const CadastroCategoria = (props) => {
         <Form.Item label='ImagePreview'>
           <Image
             width={200}
-            src={imagePreview}
+            src={categoriaForm.imagePreview}
           />
         </Form.Item>
 
@@ -132,16 +129,18 @@ const CadastroCategoria = (props) => {
         </Form.Item>
 
         <Form.Item
-          wrapperCol={{
-            span: 12,
-            offset: 6,
+          style={{
+            display: 'flex',
+            flexDirection: 'column', // Para empilhar os botões verticalmente
+            alignItems: 'flex-end', // Para alinhar os botões à direita
           }}
         >
-          <Space>
-            <Button htmlType="submit" style={{background: '#1677ff', color: 'white'}}>
-              Submit
+          <Space style={{ width: '100%' }}>
+            <Button style={{ width: '100%' }} type='' htmlType="reset">Limpar</Button>
+            <Button htmlType="submit" style={{background: '#1677ff', color: 'white', width: '100%' }}>
+              {categoriaForm?.codCategoria ? 'Alterar' : 'Salvar'}
             </Button>
-            <Button type='' htmlType="reset">reset</Button>
+            
           </Space>
         </Form.Item>
       </Form>

@@ -12,11 +12,11 @@ import {
 import convertImage64 from '../../helpers/convertImage64';
 import { useRouter } from "next/router";
 
+const user = 'a'
 const PAGE_NAME = 'Listagem de Categorias'
 const HEAD_NAME = 'Categorias'
 
 export default function Categorias() {
-  const user = 'user'
   const router = useRouter();
   const [listaCategorias, setListaCategorias] = useState([]);
 
@@ -31,7 +31,6 @@ export default function Categorias() {
   return (
     <PageContent headName={HEAD_NAME} pageName={PAGE_NAME}>
       <Button
-        // type="primary"
         style={{ position: 'fixed', bottom: '20px', right: '20px' }}
         onClick={() => router.push('/categorias/cadastro')}
       >
@@ -49,7 +48,7 @@ export default function Categorias() {
                   <SettingOutlined key="setting" />,
                   <EditOutlined
                     key="edit"
-                    onClick={() => router.push(`/cadastro?idcategoria=${categoria.cod_categoria}`)}
+                    onClick={() => router.push(`/categorias/${categoria.cod_categoria}`)}
                   />,
                   <EllipsisOutlined key="ellipsis" />,
                 ]}
