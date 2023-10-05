@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import PageContent from '../../componentes/PageContent/PageContent';
 import {
   Button,
   Form,
   Input,
 } from 'antd';
 import { UsuarioService } from "../../services/Usuario"
+import { useRouter } from "next/router";
 
 const PAGE_NAME = 'Cadastro de usuário'
 const HEAD_NAME = 'Usuário'
@@ -41,15 +41,17 @@ const tailFormItemLayout = {
   },
 };
 const SignUp = () => {
+  const router = useRouter();
   const [form] = Form.useForm();
 
   const onFinish = async (values) => {
     delete values['confirm-senha']
     const cadastroUser = await UsuarioService.create(values)
+
+    router.push('/signup/login')
   };
   
   return (
-    <PageContent headName={HEAD_NAME} pageName={PAGE_NAME}>
       <Form
         {...formItemLayout}
         form={form}
@@ -148,12 +150,11 @@ const SignUp = () => {
         </Form.Item>
 
         <Form.Item {...tailFormItemLayout}>
-          <Button type="primary" htmlType="submit">
+          <Button htmlType="submit">
             Register
           </Button>
         </Form.Item>
       </Form>
-    </PageContent>
   );
 };
 export default SignUp;
