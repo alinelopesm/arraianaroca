@@ -6,12 +6,16 @@ import {
   EditOutlined,
 } from "@ant-design/icons";
 import { useRouter } from "next/router";
+import { useSession } from 'next-auth/react';
 
 const user = 'admin'
 const PAGE_NAME = 'Listagem de Unidade de Medidas:'
 const HEAD_NAME = 'Unidade de Medidas'
 
 export default function Medidas() {
+  const { data: session } = useSession();
+  const isAuthenticated = session ? true : false
+
   const router = useRouter();
   const [listaMedidas, setListaMedidas] = useState([])
 
@@ -25,13 +29,15 @@ export default function Medidas() {
   })
 
   return (
-    <PageContent headName={HEAD_NAME} pageName={PAGE_NAME}>
-      <Button
-        style={{ position: 'fixed', right: '40px' }}
-        onClick={() => router.push('/medidas/cadastro')}
-      >
-        Cadastrar Nova Medida
-      </Button>
+    <PageContent headName={HEAD_NAME} pageName={PAGE_NAME} >
+      {isAuthenticated &&
+        <Button
+          style={{ position: 'fixed', right: '40px' }}
+          onClick={() => router.push('/medidas/cadastro')}
+        >
+          Cadastrar Nova Medida
+        </Button>
+      }
       <Row gutter={16} style={{ marginTop: '48px' }}>
         {listaMedidas.map((medida) => {
           return (
@@ -39,7 +45,7 @@ export default function Medidas() {
               <Card
                 xs={12} sm={8} md={6} lg={4}
                 style={{ marginBottom: '20px', width: '100%', height: '95%' }}
-                actions={user.includes('admin') && [
+                actions={isAuthenticated && user.includes('admin') && [
                   <EditOutlined
                     key="edit"
                     onClick={() => router.push(`/medidas/${medida.cod_un_medida}`)}

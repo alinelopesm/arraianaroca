@@ -16,7 +16,9 @@ import ActiveLink from '../Router/ActiveLink'; // Importe o seu componente Activ
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
-const SideBar = ({ collapsed }) => {
+
+const SideBar = ({ collapsed, isAuthenticated }) => {
+
   return (
     <Sider
       trigger={null}
@@ -36,9 +38,11 @@ const SideBar = ({ collapsed }) => {
           <Menu.Item key="1">
             <ActiveLink href="/receitas">Listagem</ActiveLink>
           </Menu.Item>
-          <Menu.Item key="2">
-            <ActiveLink href="/receitas/cadastro">Cadastro</ActiveLink>
-          </Menu.Item>
+          {isAuthenticated &&
+            <Menu.Item key="2">
+              <ActiveLink href="/receitas/cadastro">Cadastro</ActiveLink>
+            </Menu.Item>
+          }
         </SubMenu>
 
         {/* Menu Principal: Categorias */}
@@ -50,9 +54,11 @@ const SideBar = ({ collapsed }) => {
           <Menu.Item key="3">
             <ActiveLink href="/categorias">Listagem</ActiveLink>
           </Menu.Item>
-          <Menu.Item key="4">
-            <ActiveLink href="/categorias/cadastro">Cadastro</ActiveLink>
-          </Menu.Item>
+          {isAuthenticated &&
+            <Menu.Item key="4">
+              <ActiveLink href="/categorias/cadastro">Cadastro</ActiveLink>
+            </Menu.Item>
+          }
         </SubMenu>
 
         {/* Menu Principal: Medidas */}
@@ -64,9 +70,11 @@ const SideBar = ({ collapsed }) => {
           <Menu.Item key="5">
             <ActiveLink href="/medidas">Listagem</ActiveLink>
           </Menu.Item>
-          <Menu.Item key="6">
-            <ActiveLink href="/medidas/cadastro">Cadastro</ActiveLink>
-          </Menu.Item>
+          {isAuthenticated &&
+            <Menu.Item key="6">
+              <ActiveLink href="/medidas/cadastro">Cadastro</ActiveLink>
+            </Menu.Item>
+          }
         </SubMenu>
 
         {/* Menu Principal: Ingredientes */}
@@ -78,24 +86,27 @@ const SideBar = ({ collapsed }) => {
           <Menu.Item key="7">
             <ActiveLink href="/ingredientes">Listagem</ActiveLink>
           </Menu.Item>
-          <Menu.Item key="8">
-            <ActiveLink href="/ingredientes/cadastro">Cadastro</ActiveLink>
-          </Menu.Item>
+          {isAuthenticated &&
+            <Menu.Item key="8">
+              <ActiveLink href="/ingredientes/cadastro">Cadastro</ActiveLink>
+            </Menu.Item>
+          }
         </SubMenu>
 
         {/* Menu Principal: Usuários */}
-        <SubMenu
-          key="sub5"
-          icon={<UserOutlined />}
-          title="Usuários"
-        >
-          <Menu.Item key="9">
-            <ActiveLink href="/usuarios">Listagem</ActiveLink>
-          </Menu.Item>
-          <Menu.Item key="10">
-            <ActiveLink href="/usuarios/cadastro">Cadastro</ActiveLink>
-          </Menu.Item>
-        </SubMenu>
+        {isAuthenticated && <SubMenu
+            key="sub5"
+            icon={<UserOutlined />}
+            title="Usuários"
+          >
+            <Menu.Item key="9">
+              <ActiveLink href="/usuarios">Listagem</ActiveLink>
+            </Menu.Item>
+            <Menu.Item key="10">
+              <ActiveLink href="/usuarios/cadastro">Cadastro</ActiveLink>
+            </Menu.Item>
+          </SubMenu>
+        }
 
       </Menu>
     </Sider>

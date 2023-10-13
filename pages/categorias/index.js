@@ -8,12 +8,15 @@ import {
 } from "@ant-design/icons";
 import convertImage64 from '../../helpers/convertImage64';
 import { useRouter } from "next/router";
+import { useSession } from 'next-auth/react';
 
 const user = 'admin'
 const PAGE_NAME = 'Listagem de Categorias'
 const HEAD_NAME = 'Categorias'
 
 export default function Categorias() {
+  const { data: session } = useSession();
+  const isAuthenticated = session ? true : false
   const router = useRouter();
   const [listaCategorias, setListaCategorias] = useState([]);
 
@@ -41,7 +44,7 @@ export default function Categorias() {
               <Card
                 xs={12} sm={8} md={6} lg={4}
                 style={{ marginBottom: '20px', width: '100%', height: '95%' }}
-                actions={user.includes('admin') && [
+                actions={isAuthenticated && user.includes('admin') && [
                   <EditOutlined
                     key="edit"
                     onClick={() => router.push(`/categorias/${categoria.cod_categoria}`)}

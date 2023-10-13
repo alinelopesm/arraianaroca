@@ -3,8 +3,10 @@ import { SessionProvider } from "next-auth/react";
 import { useEffect, useState } from 'react';
 import { getSession } from 'next-auth/react';
 import { appWithTranslation } from "next-i18next";
+import { config as dotenvConfig } from "dotenv";
+dotenvConfig();
 
-function MyApp({ Component, pageProps, session }) {
+function MyApp({ Component, pageProps, session}) {
   return (
     <SessionProvider session={session}>
       <Component {...pageProps} />

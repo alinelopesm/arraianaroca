@@ -23,6 +23,7 @@ export default NextAuth({
         const userAdapter = await usuarios.find(
           (u) => u.nome === credentials.username
         );
+        console.log('user', userAdapter);
 
         if (userAdapter) {
           if (userAdapter.senha === credentials.password) {
@@ -31,6 +32,7 @@ export default NextAuth({
               email: userAdapter.email,
               image: userAdapter.foto_usuario || '',
               token: credentials.csrfToken,
+              type: userAdapter.tipo,
             }
             return Promise.resolve(user);
           }
@@ -56,7 +58,7 @@ export default NextAuth({
     async redirect({ baseUrl }) {
       return baseUrl
     },
-    async session({ session, token }) {
+    async session({ session, token, user }) {
       session.token = token
       return session
     },

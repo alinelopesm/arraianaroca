@@ -11,14 +11,15 @@ import { useSession } from 'next-auth/react';
 
 const { Header } = Layout;
 
-const HeaderScreen = ({ collapsed, setCollapsedCallback, pageName }) => {
+const HeaderScreen = ({ collapsed, setCollapsedCallback, pageName}) => {
   const { data: session } = useSession();
+  const isAuthenticated = session ? true : false
   const {
     token: { colorBgContainer },
   } = theme.useToken();
 
   // Simule um usuário autenticado para este exemplo
-  const isAuthenticated = session ? true : false
+  
 
   // Opções do menu de usuário
   const userMenu = (
@@ -37,7 +38,7 @@ const HeaderScreen = ({ collapsed, setCollapsedCallback, pageName }) => {
       </>}
       {isAuthenticated && <>
         <Menu.Item key="profile">
-          <a href="/signup">
+          <a href="/profile">
             <UserOutlined /> Perfil
           </a>
         </Menu.Item>
