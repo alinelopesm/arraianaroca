@@ -10,7 +10,10 @@ export const MedidaService = {
         return Api.get(endPoint)
     },
     create(novaMedida){
-        return Api.get(endPoint, novaMedida)
+        return Api.post(endPoint, novaMedida)
+    },
+    update(payload, id){
+        return Api.put(endPoint, payload, id)
     },
     remove(id){
         return Api.get(`${endPoint}?id=${id}`)

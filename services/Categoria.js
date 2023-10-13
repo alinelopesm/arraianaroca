@@ -4,13 +4,16 @@ const endPoint = 'categorias'
 
 export const CategoriaService = {
     get(id){
-        return Api.get(`${endPoint}?id=${id}`)
+        return Api.getById(endPoint, id)
     },
     listAll(){
         return Api.get(endPoint)
     },
-    create(novaCategoria){
-        return Api.get(endPoint, novaCategoria)
+    create(payload){
+        return Api.post(endPoint, payload)
+    },
+    update(payload, id){
+        return Api.put(endPoint, payload, id)
     },
     remove(id){
         return Api.get(`${endPoint}?id=${id}`)
