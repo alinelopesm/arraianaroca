@@ -14,13 +14,6 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
 
-  const authenticateUser = async (username, password) => {
-    const usuarios = await UsuarioService.listAll();
-    const user = usuarios.find((u) => u.nome === username && u.senha === password);
-    console.log('ser', user);
-    return user;
-  };
-
   const onFinish = async (values) => {
     setLoading(true);
     const user = await authenticateUser(values.username, values.password);

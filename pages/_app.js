@@ -2,30 +2,17 @@ import '../styles/globals.css'
 import { SessionProvider } from "next-auth/react";
 import { useEffect, useState } from 'react';
 import { getSession } from 'next-auth/react';
+import { appWithTranslation } from "next-i18next";
 
-function MyApp({ Component, pageProps }) {
-  const [session, setSession] = useState(null);
-
-  useEffect(() => {
-    // Trata a Promise e atualiza o estado quando ela é resolvida
-    getSession().then((resolvedSession) => {
-      setSession(resolvedSession);
-    });
-  }, [session]);
-
-  if (session === null) {
-    // Aguardando a resolução da Promise
-    return <p>Aguardando autenticação...</p>;
-  }
-
+function MyApp({ Component, pageProps, session }) {
   return (
-    <SessionProvider session={pageProps.session}>
+    <SessionProvider session={session}>
       <Component {...pageProps} />
     </SessionProvider>
   );
 }
 
-export default MyApp;
+export default appWithTranslation(MyApp);
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
@@ -34,5 +21,5 @@ export async function getServerSideProps(context) {
     props: {
       session,
     },
-  };drdrrdrdrb
+  };
 }

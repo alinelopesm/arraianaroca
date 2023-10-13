@@ -4,6 +4,7 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials"
 import { UsuarioService } from "../../../services/Usuario";
 import { config as dotenvConfig } from "dotenv";
+import { redirect } from "next/dist/server/api-utils";
 
 // Carregue as variáveis de ambiente do arquivo .env.local
 dotenvConfig();
@@ -19,31 +20,23 @@ export default NextAuth({
       authorize: async (credentials) => {
         // Faça a validação do usuário usando seu serviço de usuário
         const usuarios = await UsuarioService.listAll();
-        const userAddapter = usuarios.find(
-          (u) => u.nome === credentials.username && u.senha === credentials.password
+        const userAdapter = await usuarios.find(
+          (u) => u.nome === credentials.username
         );
 
-        const user = {
-          name: user.nome,
-          email: user.email,
-          image: user.foto_usuario || '',
-          token: credentials.csrfToken,
-        }
-        if (userAddapter) {
-          return Promise.resolve(user);
+        if (userAdapter) {
+          if (userAdapter.senha === credentials.password) {
+            const user = {
+              name: userAdapter.nome, // Use userAddapter instead of user
+              email: userAdapter.email,
+              image: userAdapter.foto_usuario || '',
+              token: credentials.csrfToken,
+            }
+            return Promise.resolve(user);
+          }
         } else {
           return Promise.resolve(null);
         }
-      },
-      credentials: {
-        domain: {
-          label: "Receitas Gourmet",
-          type: "text ",
-          placeholder: "Receitas Gourmet",
-          value: "Receitas",
-        },
-        username: { label: "Nome", type: "text ", placeholder: "Digite" },
-        password: { label: "Senhas", type: "password" },
       },
     }),
   ],
@@ -54,23 +47,21 @@ export default NextAuth({
     secret: process.env.NEXTAUTH_SECRET,
   },
   callbacks: {
-    async signIn({ user, account, profile, email, credentials }) {
+    async signIn({ credentials }) {
       if(credentials.csrfToken && credentials.username) {
         return true
       }
       return false
     },
-    async redirect({ url, baseUrl }) {
+    async redirect({ baseUrl }) {
       return baseUrl
     },
-    async session({ session, token, user, newSession, trigger }) {
+    async session({ session, token }) {
+      session.token = token
       return session
     },
     async jwt({ token }) {
       return token
     }
-}
-//   pages: {
-//     signIn: "/login", // Define a rota de login personalizada
-//   },
+  }
 });

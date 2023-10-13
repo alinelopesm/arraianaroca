@@ -5,6 +5,7 @@ import {
   Input,
 } from 'antd';
 import { UsuarioService } from "../../services/Usuario"
+import PageContent from '../../componentes/PageContent/PageContent';
 import { useRouter } from "next/router";
 
 const PAGE_NAME = 'Cadastro de usuário'
@@ -40,7 +41,7 @@ const tailFormItemLayout = {
     },
   },
 };
-const SignUp = () => {
+const SignUp = ({ pageProps }) => {
   const router = useRouter();
   const [form] = Form.useForm();
 
@@ -48,10 +49,11 @@ const SignUp = () => {
     delete values['confirm-senha']
     const cadastroUser = await UsuarioService.create(values)
 
-    router.push('/signup/login')
+    router.push('/api/auth/signin')
   };
   
   return (
+    <PageContent pageProps={pageProps} pageName={PAGE_NAME}>
       <Form
         {...formItemLayout}
         form={form}
@@ -155,6 +157,7 @@ const SignUp = () => {
           </Button>
         </Form.Item>
       </Form>
+    </PageContent>
   );
 };
 export default SignUp;
