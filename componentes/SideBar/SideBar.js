@@ -103,7 +103,7 @@ const SideBar = ({ collapsed, isAuthenticated }) => {
               <ActiveLink href="/usuarios">Listagem</ActiveLink>
             </Menu.Item>
             <Menu.Item key="10">
-              <ActiveLink href="/usuarios/cadastro">Cadastro</ActiveLink>
+              <ActiveLink href="/signup">Cadastro</ActiveLink>
             </Menu.Item>
           </SubMenu>
         }
