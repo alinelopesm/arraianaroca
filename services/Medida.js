@@ -4,7 +4,7 @@ const endPoint = 'un_medida'
 
 export const MedidaService = {
     get(id){
-        return Api.get(`${endPoint}?id=${id}`)
+        return Api.getById(endPoint, id)
     },
     listAll(){
         return Api.get(endPoint)

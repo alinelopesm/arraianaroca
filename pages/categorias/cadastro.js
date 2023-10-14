@@ -90,7 +90,6 @@ const CadastroCategoria = ({categoriaData}) => {
       if (edicaoCategoria) router.push('/categorias')
       return
     }
-    console.log('indo', payload);
 
     const cadastroCategoria = await CategoriaService.create(payload);
     router.push('/categorias')

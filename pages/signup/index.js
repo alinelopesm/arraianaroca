@@ -101,7 +101,7 @@ const SignUp = ({ pageProps, usuarioData }) => {
       const id = usuarioData?.codUsuario
       const edicaoUser = await UsuarioService.update(payload, id);
 
-      if (edicaoUser) router.push('/usuarios')
+      if (edicaoUser) router.push('/usuarios', usuarioData)
       return
     }
 
