@@ -6,7 +6,6 @@ import Router, { useRouter } from 'next/router';
 const method = 'editar'
 
 const AlteracaoIngrediente = ({ingrediente}) => {
-  console.log('Ingre', ingrediente);
   const ingredienteData = {
     codIngrediente: ingrediente?.cod_ingrediente,
     nome: ingrediente?.nome,
@@ -24,7 +23,6 @@ export async function getServerSideProps({params}) {
   
   
   const response = await IngredienteService.get(idIngrediente);
-  console.log('vai carai',response);
   const ingrediente = response[0] || {}
 
   return {

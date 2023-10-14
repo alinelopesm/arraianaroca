@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
+import { InboxOutlined } from '@ant-design/icons';
 import {
   Button,
   Form,
+  Space,
+  Upload,
   Input,
+  message,
+  Image
 } from 'antd';
 import { UsuarioService } from "../../services/Usuario"
 import PageContent from '../../componentes/PageContent/PageContent';
@@ -29,6 +34,14 @@ const formItemLayout = {
     },
   },
 };
+
+const normFile = (e) => {
+  if (Array.isArray(e)) {
+    return e;
+  }
+  return e?.fileList;
+};
+
 const tailFormItemLayout = {
   wrapperCol: {
     xs: {
@@ -41,13 +54,58 @@ const tailFormItemLayout = {
     },
   },
 };
-const SignUp = ({ pageProps }) => {
+const SignUp = ({ pageProps, usuarioData }) => {
+  console.log('usuarioData', usuarioData);
   const router = useRouter();
   const [form] = Form.useForm();
 
+  const propsForm = {
+    name: 'file',
+    multiple: false,
+    accept: 'image/*',
+    imagePreview: usuarioData?.imagePreview,
+    onChange(info) {
+      const { status } = info.file;
+      if (status !== 'uploading') {
+        console.log(info.file, info.fileList);
+      }
+      if (status === 'done') {
+        message.success(`${info.file.name} file uploaded successfully.`);
+        console.log('como estou', info);
+        setImagePreview(imagePath= `${info.file.thumbUrl}`)
+      } else if (status === 'error') {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+  
+    },
+    onDrop(e) {
+      console.log('Dropped files', e.dataTransfer.files);
+    },
+  };
+
   const onFinish = async (values) => {
     delete values['confirm-senha']
-    const cadastroUser = await UsuarioService.create(values)
+    
+    let payload = {
+      nome: usuarioData?.nome,
+      email: usuarioData?.email || '',
+      senha: usuarioData?.senha,
+      telefone: usuarioData?.telefone,
+    };
+
+    if(usuarioData?.codUsuario) {
+      const file = values?.dragger?.length > 0 && values?.dragger[0]?.thumbUrl || '';
+      const imagePreview = `${file}`
+
+      payload.foto_usuario = imagePreview
+      const id = usuarioData?.codUsuario
+      const edicaoUser = await UsuarioService.update(payload, id);
+
+      if (edicaoUser) router.push('/usuarios', usuarioData)
+      return
+    }
+
+    const cadastroUser = await UsuarioService.create(payload)
 
     router.push('/api/auth/signin')
   };
@@ -63,10 +121,33 @@ const SignUp = ({ pageProps }) => {
           maxWidth: 600,
         }}
         scrollToFirstError
-      >
+      > 
+        {usuarioData?.codUsuario &&
+          <>
+            <Form.Item label='ImagePreview'>
+              <Image
+                width={200}
+                src={usuarioData?.imagePreview}
+              />
+            </Form.Item>
+
+            <Form.Item label="Dragger">
+              <Form.Item name="dragger" valuePropName="fileList" getValueFromEvent={normFile} noStyle>
+                <Upload.Dragger props={propsForm} name="files" listType="picture">
+                  <p className="ant-upload-drag-icon">
+                    <InboxOutlined /> 
+                  </p>
+                  <p className="ant-upload-text">Click or drag file to this area to upload</p>
+                  <p className="ant-upload-hint">Support for a single or bulk upload.</p>
+                </Upload.Dragger>
+              </Form.Item>
+            </Form.Item>
+          </>
+        }
         <Form.Item
           name="nome"
           label="Nome"
+          initialValue={usuarioData?.nome || ''}
           tooltip="Como você quer que os outros te chamem?"
           rules={[
             {
@@ -82,6 +163,7 @@ const SignUp = ({ pageProps }) => {
         <Form.Item
           name="email"
           label="E-mail"
+          initialValue={usuarioData?.email || ''}
           rules={[
             {
               type: 'email',
@@ -99,6 +181,7 @@ const SignUp = ({ pageProps }) => {
         <Form.Item
           name="senha"
           label="senha"
+          initialValue={usuarioData?.senha|| ''}
           rules={[
             {
               required: true,
@@ -136,6 +219,7 @@ const SignUp = ({ pageProps }) => {
         <Form.Item
           name="telefone"
           label="Celular"
+          initialValue={usuarioData?.telefone}
           rules={[
             {
               required: true,
@@ -153,7 +237,7 @@ const SignUp = ({ pageProps }) => {
 
         <Form.Item {...tailFormItemLayout}>
           <Button htmlType="submit">
-            Register
+            {usuarioData?.codUsuario ? 'Alterar' : 'Salvar'}
           </Button>
         </Form.Item>
       </Form>

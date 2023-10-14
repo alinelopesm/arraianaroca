@@ -90,7 +90,6 @@ const CadastroCategoria = ({categoriaData}) => {
       if (edicaoCategoria) router.push('/categorias')
       return
     }
-    console.log('indo', payload);
 
     const cadastroCategoria = await CategoriaService.create(payload);
     router.push('/categorias')
@@ -110,11 +109,11 @@ const CadastroCategoria = ({categoriaData}) => {
           name="nome"
           label="Nome"
           initialValue={categoriaForm?.nome || ''}
-          tooltip="Como você quer que os outros te chamem?"
+          tooltip="Como você quer que a categoria seja identificada?"
           rules={[
             {
               required: true,
-              message: 'Por favor, insira seu nome!',
+              message: 'Por favor, insira um nome para a categoria!',
               whitespace: true,
             },
           ]}

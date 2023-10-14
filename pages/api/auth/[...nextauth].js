@@ -28,6 +28,7 @@ export default NextAuth({
         if (userAdapter) {
           if (userAdapter.senha === credentials.password) {
             const user = {
+              id: userAdapter.cod_usuario,
               name: userAdapter.nome, // Use userAddapter instead of user
               email: userAdapter.email,
               image: userAdapter.foto_usuario || '',
@@ -60,6 +61,8 @@ export default NextAuth({
     },
     async session({ session, token, user }) {
       session.token = token
+      // session.user.id = user.id;
+      // session.user.type = user.type;
       return session
     },
     async jwt({ token }) {

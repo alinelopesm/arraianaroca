@@ -4,13 +4,16 @@ const endPoint = 'usuarios'
 
 export const UsuarioService = {
     get(id){
-        return Api.get(`${endPoint}?id=${id}`)
+        return Api.getById(endPoint, id)
     },
     listAll(){
         return Api.get(endPoint)
     },
     create(novoUsuario){
         return Api.post(endPoint, novoUsuario)
+    },
+    update(payload, id){
+        return Api.put(endPoint, payload, id)
     },
     remove(id){
         return Api.get(`${endPoint}?id=${id}`)
