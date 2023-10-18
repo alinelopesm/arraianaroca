@@ -1,4 +1,4 @@
-const url = 'http://localhost:8001/'
+const url = 'http://localhost:8000/'
 export const Api = {
     getById(endPoint, id) {
         return fetch(`${url}${endPoint}/${id}`).then(response => response.json())
