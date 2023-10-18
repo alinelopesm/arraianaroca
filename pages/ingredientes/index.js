@@ -47,8 +47,7 @@ export default function Ingredientes() {
                 actions={isAuthenticated && [
                   <EditOutlined
                     key="edit"
-                    onClick={() => router.push(`/ingredientes/${ingrediente.cod_ingrediente
-}`)}
+                    onClick={() => router.push(`/ingredientes/${ingrediente.cod_ingrediente}`)}
                   />,
                 ]}
               >
