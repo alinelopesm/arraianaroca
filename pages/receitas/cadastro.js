@@ -1,13 +1,16 @@
 import React, { useState } from "react";
-import { PlusOutlined, CloseOutlined  } from "@ant-design/icons";
+import { PlusOutlined, CloseOutlined, MinusCircleOutlined} from "@ant-design/icons";
 import { Form, Input, InputNumber, Select, Upload, Button, Switch, Card, Space, Typography  } from 'antd';
-// import TextArea from 'antd/lib/input/TextArea';
+import PageContent from '../../componentes/PageContent/PageContent';
 import { MedidaService } from "../../services/Medida";
 import { IngredienteService } from '../../services/Ingrediente';
 import { CategoriaService } from '../../services/Categoria';
 import { getSession } from "next-auth/react";
+import { ReceitaService } from "../../services/Receita";
+import { IngredienteReceitaService } from '../../services/IngredienteReceita'
 
-const { TextArea } = Input;
+const PAGE_NAME = 'Cadastro de Receitas'
+const HEAD_NAME = 'Receitas'
 
 const normFile = (e) => {
   if (Array.isArray(e)) {
@@ -17,56 +20,60 @@ const normFile = (e) => {
 };
 
 const RecipeForm = ({ userId, categoriaOptions, ingredientesOptions, medidasOptions }) => {
-  const [form] = Form.useForm();
-  console.log('Sou form', form.getFieldsValue());
-  const [componentDisabled, setComponentDisabled] = useState(true);
-  const [listaIngredientes, setListaIngredientes] = useState([])
-  console.log('Sou listaIngredientes', listaIngredientes);
-
+  const [form, setForm] = Form.useForm();
   const [categorias] = useState(categoriaOptions);
-
   const [medidas] = useState(medidasOptions);
-
   const [ingredientes] = useState(ingredientesOptions);
-
-  const dataReceita = {
+  const [dataReceita] = useState({
     foto: "",
-    cod_usuario: "1",
-    cod_receita: "1",
+    cod_usuario: userId,
+    cod_receita: null,
     nome_receita: "Receita test",
-    tempo_preparo: "12",
-    cod_categoria: "1",
-    modo_preparo: "colocar no fogo",
-    status: "ativo",
-    dataIngredientes: [
-      {
-        cod_ingred_receita: "123",
-        cod_receita: "1",
-        quantidade: "1",
-        cod_ingrediente: "1",
-        cod_un_medida: "1"
-      }
-    ]
-  };
+    tempo_preparo: null,
+    cod_categoria: null,
+    modo_preparo: "",
+    status_receita: true,
+    items: []
+  })
 
   const onFinish = (values) => {
-    // Aqui, 'values' conterá todos os dados do formulário quando o formulário for submetido.
     console.log('Dados do formulário:', values);
-    // Você pode enviar esses dados para a API ou fazer o que desejar com eles.
+    cadastroReceita(values)
   };
 
+  const cadastroReceita = async (dataReceita) => {
+    const payloadReceita= {
+      cod_usuario: userId,
+      cod_categoria: dataReceita.cod_categoria,
+      foto: dataReceita.foto || '',
+      nome_receita: dataReceita.nome_receita,
+      tempo_preparo: parseFloat(dataReceita.tempo_preparo),
+      modo_preparo: dataReceita.modo_preparo,
+      status_receita: 'ativo',
+    };
+
+    const codReceita = await ReceitaService.create(payloadReceita);
+    if (codReceita?.length > 0) cadastroIngredientes(dataReceita, codReceita[0])
+  }
+
+  const cadastroIngredientes = async (dataIngrediente, codReceita) => {
+    const payloadIngrediente = {
+      cod_receita: codReceita,
+      ingredientes: dataIngrediente.items
+    }
+    
+    const cadastroMedida = await IngredienteReceitaService.create(payloadIngrediente);
+  }
+
   return (
-    <>
+    <PageContent headName={HEAD_NAME} pageName={PAGE_NAME}>
       <Form
-        labelCol={{ span: 4 }}
-        wrapperCol={{ span: 14 }}
-        layout="horizontal"
-        // disabled={componentDisabled}
-        style={{ maxWidth: 600 }}
-        form={form}
-        initialValues={{
-          items: [{}],
+        labelCol={{ span: 12 }}
+        wrapperCol={{
+          span: 18,
         }}
+        layout="vertical"
+        form={form}
         onFinish={onFinish}
       >
         <Form.Item
@@ -97,7 +104,7 @@ const RecipeForm = ({ userId, categoriaOptions, ingredientesOptions, medidasOpti
         >
           <InputNumber />
         </Form.Item>
-        <Form.Item label="Categorias">
+        <Form.Item label="Categorias" name='cod_categoria' initialValue={dataReceita.cod_categoria}>
           <Select>
             {categorias.map((option) => {
               return (
@@ -108,109 +115,66 @@ const RecipeForm = ({ userId, categoriaOptions, ingredientesOptions, medidasOpti
             })}
           </Select>
         </Form.Item>
-        <Form.Item label="Ingredientes" name='dataIngredientes'>
-          <Select mode="multiple" onChange={(values, value) => { setListaIngredientes(value.value)}}>
-            {ingredientes.map((option) => {
-              return (
-                <Select.Option key={option.value} value={option.value}>
-                  {option.label}
-                </Select.Option>
-              );
-            })}
-          </Select>
-        </Form.Item>
-        <Form.List name="items">
-        {(fields, { add, remove }) => (
-          <div
+        <Form.List name="items" layout="vertical" initialValue={dataReceita.items}>
+          {(fields, { add, remove }) => (
+            <div
             style={{
               display: 'flex',
-              rowGap: 16,
-              flexDirection: 'column',
+              flexDirection: 'column'
             }}
           >
-            {fields.map((field) => (
-              <Card
-                size="small"
-                title={`Ingredientes${field.name + 1}`}
-                key={field.key}
-                extra={
-                  <CloseOutlined
-                    onClick={() => {
-                      remove(field.name);
-                    }}
-                  />
-                }
-              >
-                <Form.Item label="Name" name={[field.name, 'name']}>
-                  <Input />
-                </Form.Item>
-
-                {listaIngredientes.map((ingredient, index) => (
-                  <Form.Item
-                    label={`Selected Ingredient ${index + 1}`}
-                    name={[field.name, 'listaIngredientes', index]}
-                  >
-                    <Input value={ingredient} disabled />
+              {fields.map(({ name, key }) => (
+                <Space key={key} >
+                  <Form.Item label="Ingredientes" name={[name, 'cod_ingrediente']} key={[key, 'cod_ingrediente']}>
+                    <Select>
+                      {ingredientes.map((option) => {
+                        return (
+                          <Select.Option key={option.value} value={option.value} children={option.label}>
+                            {option.label}
+                          </Select.Option>
+                        );
+                      })}
+                    </Select>
                   </Form.Item>
-                ))}
+                  <Form.Item
+                    name={[name, 'quantidade']}
+                    key={[key, 'quantidade']}
+                    label='Quantidade'
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    name={[name, 'cod_un_medida']}
+                    key={[key, 'cod_un_medida']}
+                    label='Medidas'
+                  >
+                    <Select>
+                      {medidas.map((option) => (
+                        <Select.Option key={option.value} value={option.value}>
+                          {option.label}
+                        </Select.Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                  <MinusCircleOutlined onClick={() => remove(name)} />
+                </Space>
+              ))}
+              <Form.Item>
+                <Button
+                  type="dashed"
+                  onClick={() => add()}
+                  icon={<PlusOutlined />}
+                >
+                  Adicionar Ingrediente
+                </Button>
+              </Form.Item>
+            </div>
+            
+          )}
+        </Form.List>
 
-                {/* Nest Form.List */}
-                <Form.Item label="List">
-                  <Form.List name={[field.name, 'list']}>
-                    {(subFields, subOpt) => (
-                      <div
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          rowGap: 16,
-                        }}
-                      >
-                        {subFields.map((subField) => (
-                          <Space key={subField.key}>
-                            <Form.Item noStyle name={[subField.name, 'first']}>
-                              <Input placeholder="first" />
-                            </Form.Item>
-                            <Form.Item noStyle name={[subField.name, 'second']}>
-                              <Input placeholder="second" />
-                            </Form.Item>
-                            <CloseOutlined
-                              onClick={() => {
-                                subOpt.remove(subField.name);
-                              }}
-                            />
-                          </Space>
-                        ))}
-                        <Button type="dashed" onClick={() => subOpt.add()} block>
-                          + Add Sub Item
-                        </Button>
-                      </div>
-                    )}
-                  </Form.List>
-                </Form.Item>
-              </Card>
-            ))}
-
-            <Button type="dashed" onClick={() => add()} block>
-              + Add Item
-            </Button>
-          </div>
-        )}
-      </Form.List>
-      <Form.Item noStyle shouldUpdate>
-        {() => (
-          <Typography>
-            <pre>{JSON.stringify(form.getFieldsValue(), null, 2)}</pre>
-          </Typography>
-        )}
-      </Form.Item>
-
-        <Form.Item label="Modo de preparo">
-          <TextArea rows={4} />
-        </Form.Item>
-        <Form.Item label="Status" valuePropName="checked">
-          <Switch
-            defaultChecked={dataReceita.status === "ativo" ? true : false}
-          />
+        <Form.Item label="Modo de preparo" initialValue={dataReceita.modo_preparo} name='modo_preparo'>
+          <Input.TextArea rows={4} />
         </Form.Item>
         <Form.Item
           label="Foto receita"
@@ -225,10 +189,17 @@ const RecipeForm = ({ userId, categoriaOptions, ingredientesOptions, medidasOpti
           </Upload>
         </Form.Item>
         <Form.Item>
-          <Button type="primary" onClick={() => form.submit()}>Salvar</Button>
+          <Button htmlType="submit" style={{background: '#1677ff', color: 'white', width: '100%' }} type="primary" onClick={() => form.submit()}>Salvar</Button>
         </Form.Item>
+        {/* <Form.Item noStyle shouldUpdate>
+          {() => (
+            <Typography>
+              <pre>{JSON.stringify(form.getFieldsValue(), null, 2)}</pre>
+            </Typography>
+          )}
+        </Form.Item> */}
       </Form>
-    </>
+    </PageContent>
   );
 };
 
