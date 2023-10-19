@@ -11,7 +11,7 @@ import {
   UserAddOutlined,
   UnorderedListOutlined,
 } from '@ant-design/icons';
-import ActiveLink from '../Router/ActiveLink'; // Importe o seu componente ActiveLink
+import ActiveLink from '../Router/ActiveLink';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -22,30 +22,30 @@ const SideBar = ({ collapsed, isAuthenticated }) => {
     <Sider
       trigger={null}
       collapsible
-      collapsed={collapsed} // Use `collapsed` instead of `inlineCollapsed`
+      collapsed={collapsed}
       width={collapsed ? 80 : 200}
+      theme="light"
     >
       <div className="demo-logo-vertical" />
       <Menu theme="light" mode="inline" defaultSelectedKeys={['1']}>
         <Menu.Item key="home" icon={<HomeOutlined />}>
           <ActiveLink href="/">Home</ActiveLink>
         </Menu.Item>
-        {/* Menu Principal: Receitas */}
         {isAuthenticated &&
-          <Menu.Item key="perfil" icon={<HomeOutlined />}>
+          <Menu.Item key="perfil" icon={<UserOutlined />}>
             <ActiveLink href="/perfil">Perfil</ActiveLink>
           </Menu.Item>
         }
         <SubMenu
           key="receitas"
-          icon={<HomeOutlined />}
+          icon={<AppstoreOutlined />}
           title="Receitas"
         >
           <Menu.Item key="lista-receitas">
             <ActiveLink href="/receitas">Listagem</ActiveLink>
           </Menu.Item>
           {isAuthenticated &&
-            <Menu.Item key="cadastro-receita">
+            <Menu.Item key="cadastro-receita" icon={<PlusOutlined />}>
               <ActiveLink href="/receitas/cadastro">Cadastro</ActiveLink>
             </Menu.Item>
           }
@@ -61,7 +61,7 @@ const SideBar = ({ collapsed, isAuthenticated }) => {
             <ActiveLink href="/categorias">Listagem</ActiveLink>
           </Menu.Item>
           {isAuthenticated &&
-            <Menu.Item key="cadastro-categoria">
+            <Menu.Item key="cadastro-categoria" icon={<PlusOutlined />}>
               <ActiveLink href="/categorias/cadastro">Cadastro</ActiveLink>
             </Menu.Item>
           }
@@ -77,7 +77,7 @@ const SideBar = ({ collapsed, isAuthenticated }) => {
             <ActiveLink href="/medidas">Listagem</ActiveLink>
           </Menu.Item>
           {isAuthenticated &&
-            <Menu.Item key="cadastro-medida">
+            <Menu.Item key="cadastro-medida" icon={<PlusOutlined />}>
               <ActiveLink href="/medidas/cadastro">Cadastro</ActiveLink>
             </Menu.Item>
           }
@@ -93,7 +93,7 @@ const SideBar = ({ collapsed, isAuthenticated }) => {
             <ActiveLink href="/ingredientes">Listagem</ActiveLink>
           </Menu.Item>
           {isAuthenticated &&
-            <Menu.Item key="cadastro-ingrediente">
+            <Menu.Item key="cadastro-ingrediente" icon={<PlusOutlined />}>
               <ActiveLink href="/ingredientes/cadastro">Cadastro</ActiveLink>
             </Menu.Item>
           }
@@ -108,7 +108,7 @@ const SideBar = ({ collapsed, isAuthenticated }) => {
             <Menu.Item key="lista-usuarios">
               <ActiveLink href="/usuarios">Listagem</ActiveLink>
             </Menu.Item>
-            <Menu.Item key="cadastro-usuario">
+            <Menu.Item key="cadastro-usuario" icon={<UserAddOutlined />}>
               <ActiveLink href="/signup">Cadastro</ActiveLink>
             </Menu.Item>
           </SubMenu>

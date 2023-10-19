@@ -134,17 +134,20 @@ const CadastroReceita = ({ receitaData, userId, categoriaOptions, ingredientesOp
         <Form.Item
           label="Codigo Usuário"
           name="cod_usuario"
-          initialValue={dataReceita?.cod_usuario}
+          initialValue={dataReceita?.cod_usuario || userId}
         >
           <Input disabled />
         </Form.Item>
-        <Form.Item
-          label="Codigo da receita"
-          name="cod_receita"
-          initialValue={dataReceita?.cod_receita}
-        >
-          <Input disabled />
-        </Form.Item>
+        {dataReceita?.cod_receita &&
+          <Form.Item
+            label="Codigo da receita"
+            name="cod_receita"
+            initialValue={dataReceita?.cod_receita}
+          >
+            <Input disabled />
+          </Form.Item>
+        }
+        
         <Form.Item
           label="Nome da receita"
           name="nome_receita"
