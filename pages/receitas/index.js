@@ -24,7 +24,7 @@ export default function Receitas() {
       const receitas = await ReceitaService.listAll()
       setListaReceitas(receitas)
     }
-
+    
     getReceitas()
   })
 
