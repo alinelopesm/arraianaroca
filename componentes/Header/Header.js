@@ -73,7 +73,7 @@ const HeaderScreen = ({ collapsed, setCollapsedCallback, pageName}) => {
           {pageName || ''}
         </Col>
         <Row style={{paddingRight: '24px', gap: '8px', direction: 'revert', alignItems: 'center'}}>
-          <Typography >{session && session?.user?.name}</Typography>
+          <Typography >{(session && session?.user?.name) || 'Fazer Login'}</Typography>
           <Dropdown overlay={userMenu} trigger={['click']}>
             <Button
               type="text"

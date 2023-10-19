@@ -1,7 +1,6 @@
 import React from 'react';
 import CadastroIngrediente from './cadastro';
 import { IngredienteService } from "../../services/Ingrediente"
-import Router, { useRouter } from 'next/router';
 
 const method = 'editar'
 
@@ -20,7 +19,6 @@ export default AlteracaoIngrediente;
 
 export async function getServerSideProps({params}) {
   const { idIngrediente } = params; 
-  
   
   const response = await IngredienteService.get(idIngrediente);
   const ingrediente = response[0] || {}

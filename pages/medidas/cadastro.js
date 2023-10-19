@@ -35,7 +35,7 @@ const formItemLayout = {
 
 const CadastroMedida = ({medidaData}) => {
   const router = useRouter();
-  const [medidaForm, setCategoriaForm] = useState(medidaData)
+  const [medidaForm, setMedidaForm] = useState(medidaData)
 
   const onFinish = async (values) => {
     let payload = {
@@ -45,7 +45,7 @@ const CadastroMedida = ({medidaData}) => {
 
     if(medidaData?.cod_un_medida) {
       const id = medidaData?.cod_un_medida
-      const edicaoCategoria = await MedidaService.update(payload, id);
+      const edicaoMedida = await MedidaService.update(payload, id);
 
       router.push('/medidas')
       return
@@ -117,3 +117,5 @@ const CadastroMedida = ({medidaData}) => {
   );
 };
 export default CadastroMedida;
+
+

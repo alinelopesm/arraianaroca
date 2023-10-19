@@ -11,11 +11,10 @@ import {
   UserAddOutlined,
   UnorderedListOutlined,
 } from '@ant-design/icons';
-import ActiveLink from '../Router/ActiveLink'; // Importe o seu componente ActiveLink
+import ActiveLink from '../Router/ActiveLink';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
-
 
 const SideBar = ({ collapsed, isAuthenticated }) => {
 
@@ -25,21 +24,28 @@ const SideBar = ({ collapsed, isAuthenticated }) => {
       collapsible
       collapsed={collapsed}
       width={collapsed ? 80 : 200}
+      theme="light"
     >
       <div className="demo-logo-vertical" />
-      <Menu theme="light" mode="inline" defaultSelectedKeys={['1']} inlineCollapsed={collapsed}>
-
-        {/* Menu Principal: Receitas */}
+      <Menu theme="light" mode="inline" defaultSelectedKeys={['1']}>
+        <Menu.Item key="home" icon={<HomeOutlined />}>
+          <ActiveLink href="/">Home</ActiveLink>
+        </Menu.Item>
+        {isAuthenticated &&
+          <Menu.Item key="perfil" icon={<UserOutlined />}>
+            <ActiveLink href="/perfil">Perfil</ActiveLink>
+          </Menu.Item>
+        }
         <SubMenu
-          key="sub1"
-          icon={<HomeOutlined />}
+          key="receitas"
+          icon={<AppstoreOutlined />}
           title="Receitas"
         >
-          <Menu.Item key="1">
+          <Menu.Item key="lista-receitas">
             <ActiveLink href="/receitas">Listagem</ActiveLink>
           </Menu.Item>
           {isAuthenticated &&
-            <Menu.Item key="2">
+            <Menu.Item key="cadastro-receita" icon={<PlusOutlined />}>
               <ActiveLink href="/receitas/cadastro">Cadastro</ActiveLink>
             </Menu.Item>
           }
@@ -47,15 +53,15 @@ const SideBar = ({ collapsed, isAuthenticated }) => {
 
         {/* Menu Principal: Categorias */}
         <SubMenu
-          key="sub2"
+          key="categorias"
           icon={<BookOutlined />}
           title="Categorias"
         >
-          <Menu.Item key="3">
+          <Menu.Item key="lista-categorias">
             <ActiveLink href="/categorias">Listagem</ActiveLink>
           </Menu.Item>
           {isAuthenticated &&
-            <Menu.Item key="4">
+            <Menu.Item key="cadastro-categoria" icon={<PlusOutlined />}>
               <ActiveLink href="/categorias/cadastro">Cadastro</ActiveLink>
             </Menu.Item>
           }
@@ -63,15 +69,15 @@ const SideBar = ({ collapsed, isAuthenticated }) => {
 
         {/* Menu Principal: Medidas */}
         <SubMenu
-          key="sub3"
+          key="medidas"
           icon={<ContainerOutlined />}
           title="Medidas"
         >
-          <Menu.Item key="5">
+          <Menu.Item key="lista-medidas">
             <ActiveLink href="/medidas">Listagem</ActiveLink>
           </Menu.Item>
           {isAuthenticated &&
-            <Menu.Item key="6">
+            <Menu.Item key="cadastro-medida" icon={<PlusOutlined />}>
               <ActiveLink href="/medidas/cadastro">Cadastro</ActiveLink>
             </Menu.Item>
           }
@@ -79,15 +85,15 @@ const SideBar = ({ collapsed, isAuthenticated }) => {
 
         {/* Menu Principal: Ingredientes */}
         <SubMenu
-          key="sub4"
+          key="ingredientes"
           icon={<UnorderedListOutlined />}
           title="Ingredientes"
         >
-          <Menu.Item key="7">
+          <Menu.Item key="lista-ingredientes">
             <ActiveLink href="/ingredientes">Listagem</ActiveLink>
           </Menu.Item>
           {isAuthenticated &&
-            <Menu.Item key="8">
+            <Menu.Item key="cadastro-ingrediente" icon={<PlusOutlined />}>
               <ActiveLink href="/ingredientes/cadastro">Cadastro</ActiveLink>
             </Menu.Item>
           }
@@ -95,19 +101,18 @@ const SideBar = ({ collapsed, isAuthenticated }) => {
 
         {/* Menu Principal: Usuários */}
         {isAuthenticated && <SubMenu
-            key="sub5"
+            key="usuarios"
             icon={<UserOutlined />}
             title="Usuários"
           >
-            <Menu.Item key="9">
+            <Menu.Item key="lista-usuarios">
               <ActiveLink href="/usuarios">Listagem</ActiveLink>
             </Menu.Item>
-            <Menu.Item key="10">
+            <Menu.Item key="cadastro-usuario" icon={<UserAddOutlined />}>
               <ActiveLink href="/signup">Cadastro</ActiveLink>
             </Menu.Item>
           </SubMenu>
         }
-
       </Menu>
     </Sider>
   );
