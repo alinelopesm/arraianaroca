@@ -56,8 +56,8 @@ const Home = () => {
                   alt="example" src={convertImage64(item?.foto)}
                 />
               }
-              onClick={() => TYPE_USER !== 'admin' ? router.push(`/receitas/${item?.cod_receita}`) : null}
-              actions={TYPE_USER === 'admin' ? [
+              onClick={() => !isAuthenticated || TYPE_USER !== 'admin' ? router.push(`/receitas/${item?.cod_receita}`) : null}
+              actions={isAuthenticated  && TYPE_USER === 'admin' ? [
                 <EditOutlined key="edit" onClick={() => router.push(`/receitas/cadastro/${item?.cod_receita}`)}/>, 
                 <EyeOutlined key="view" onClick={() => router.push(`/receitas/${item?.cod_receita}`)}/>
               ]: null}
