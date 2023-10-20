@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSession } from 'next-auth/react';
 import { useRouter } from "next/router";
 import { Card, List, Avatar, Image } from 'antd';
-import { EditOutlined } from '@ant-design/icons';
+import { EditOutlined, EyeOutlined } from '@ant-design/icons';
 import { ReceitaService } from "../services/Receita";
 import PageContent from '../componentes/PageContent/PageContent';
 import convertImage64 from '../helpers/convertImage64'
@@ -10,8 +10,10 @@ import convertImage64 from '../helpers/convertImage64'
 const { Meta } = Card;
 const PAGE_NAME = 'Home'
 const HEAD_NAME = 'Receitas Gourmet'
+/* Pegar o tipo do usuario na variavel de ambiente */
+const TYPE_USER = process.env.NEXT_PUBLIC_TYPE_USER 
 
-const Home = (props) => {
+const Home = () => {
   /*  Consome as sessões e rotas */
   const { data: session } = useSession();
   const isAuthenticated = session ? true : false
@@ -21,11 +23,11 @@ const Home = (props) => {
   const [listaReceitas, setListaReceitas] = useState([])
   
   useEffect(() => {
+    /*  Busca lista de receitas  ao carregar a tela*/
     async function getReceitas() {
       const receitas = await ReceitaService.listAll()
       setListaReceitas(receitas)
     }
-    
     getReceitas()
   })
 
@@ -48,15 +50,16 @@ const Home = (props) => {
         renderItem={(item) => (
           <List.Item>
             <Card
-              hoverable
+              hoverable={TYPE_USER !== 'admin'}
               cover={
                 <img
                   alt="example" src={convertImage64(item?.foto)}
                 />
               }
-              onClick={() => router.push(`/receitas/${item?.cod_receita}`)}
-              actions={props.TYPE_USER === 'admin' ? [
-                <EditOutlined key="edit" />,
+              onClick={() => TYPE_USER !== 'admin' ? router.push(`/receitas/${item?.cod_receita}`) : null}
+              actions={TYPE_USER === 'admin' ? [
+                <EditOutlined key="edit" onClick={() => router.push(`/receitas/cadastro/${item?.cod_receita}`)}/>, 
+                <EyeOutlined key="view" onClick={() => router.push(`/receitas/${item?.cod_receita}`)}/>
               ]: null}
             >
               <Meta
@@ -71,9 +74,3 @@ const Home = (props) => {
 };
 
 export default Home;
-
-Home.getInitialProps = async () => {
-  return {
-    TYPE_USER: process.env.TYPE_USER,
-  };
-};
