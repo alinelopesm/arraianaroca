@@ -9,8 +9,8 @@ import { useSession } from 'next-auth/react';
 const { Content } = Layout;
 
 
-const PageContent = ({ pageProps, headName, pageName, children}) => {
-  const [collapsed, setCollapsed] = useState(false);
+const PageContent = ({ headName, pageName, children}) => {
+  const [collapsed, setCollapsed] = useState(true);
   const { data: session } = useSession();
   const isAuthenticated = session ? true : false
   const router = useRouter();

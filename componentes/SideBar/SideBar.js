@@ -25,6 +25,14 @@ const SideBar = ({ collapsed, isAuthenticated }) => {
       collapsed={collapsed}
       width={collapsed ? 80 : 200}
       theme="light"
+      breakpoint="lg"
+      collapsedWidth="50"
+      onBreakpoint={(broken) => {
+        console.log(broken);
+      }}
+      onCollapse={(collapsed, type) => {
+        console.log(collapsed, type);
+      }}
     >
       <div className="demo-logo-vertical" />
       <Menu theme="light" mode="inline" defaultSelectedKeys={['1']}>
