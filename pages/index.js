@@ -1,24 +1,25 @@
 import React, { useState, useEffect } from "react";
-import PageContent from '../componentes/PageContent/PageContent';
-import { ReceitaService } from "../services/Receita"
 import { useSession } from 'next-auth/react';
 import { useRouter } from "next/router";
-import { Card, List, Avatar} from 'antd';
-import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
+import { Card, List, Avatar, Image } from 'antd';
+import { EditOutlined } from '@ant-design/icons';
+import { ReceitaService } from "../services/Receita";
+import PageContent from '../componentes/PageContent/PageContent';
+import convertImage64 from '../helpers/convertImage64'
 
 const { Meta } = Card;
-const type_user = 'admin'
-
 const PAGE_NAME = 'Home'
+const HEAD_NAME = 'Receitas Gourmet'
 
-const Home = ({ Component, pageProps }) => {
+const Home = (props) => {
+  /*  Consome as sessões e rotas */
   const { data: session } = useSession();
+  const isAuthenticated = session ? true : false
   const router = useRouter();
 
+  /*  Carrega lista de receitas */
   const [listaReceitas, setListaReceitas] = useState([])
-
-  const isAuthenticated = session ? true : false
-
+  
   useEffect(() => {
     async function getReceitas() {
       const receitas = await ReceitaService.listAll()
@@ -29,9 +30,8 @@ const Home = ({ Component, pageProps }) => {
   })
 
   return (
-    <PageContent pageProps={pageProps} pageName={PAGE_NAME}>
+    <PageContent headName={HEAD_NAME} pageName={PAGE_NAME}>
       <h1>Receitas</h1>
-
       <List
         style={{marginTop: '48px'}}
         grid={{
@@ -39,7 +39,7 @@ const Home = ({ Component, pageProps }) => {
           xs: 1,
           sm: 2,
           md: 2,
-          lg: 2,
+          lg: 4,
           xl: 4,
           xxl: 3,
         }}
@@ -48,19 +48,18 @@ const Home = ({ Component, pageProps }) => {
         renderItem={(item) => (
           <List.Item>
             <Card
-              style={{ width: 200 }}
+              hoverable
               cover={
                 <img
-                  alt="example"
-                  src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                  alt="example" src={convertImage64(item?.foto)}
                 />
               }
-              actions={type_user === 'admn' ? [
+              onClick={() => router.push(`/receitas/${item?.cod_receita}`)}
+              actions={props.TYPE_USER === 'admin' ? [
                 <EditOutlined key="edit" />,
               ]: null}
             >
               <Meta
-                avatar={<Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel" />}
                 title={item.nome_receita}
               />
             </Card>
@@ -72,3 +71,9 @@ const Home = ({ Component, pageProps }) => {
 };
 
 export default Home;
+
+Home.getInitialProps = async () => {
+  return {
+    TYPE_USER: process.env.TYPE_USER,
+  };
+};
