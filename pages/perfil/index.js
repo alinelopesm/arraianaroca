@@ -22,7 +22,6 @@ const Profile = ({userDataServer, minhasReceitas}) => {
     imageUrl: convertImage64(userDataServer?.foto_usuario),
     receitas: minhasReceitas,
   };
-  console.log('Sou recipies');
 
   const editProfile = () => {
     router.push(`/usuarios/${userDataServer.cod_usuario}`)

@@ -33,6 +33,16 @@ const SideBar = ({ collapsed, isAuthenticated }) => {
       onCollapse={(collapsed, type) => {
         console.log(collapsed, type);
       }}
+      style={{
+        overflow: 'auto',
+        height: '100vh',
+        position: 'fixed',
+        left: 0,
+        top: '72px',
+        bottom: 0,
+        zIndex: 1,
+
+      }}
     >
       <div className="demo-logo-vertical" />
       <Menu theme="light" mode="inline" defaultSelectedKeys={['1']}>

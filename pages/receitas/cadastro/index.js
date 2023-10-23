@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { PlusOutlined, CloseOutlined, MinusCircleOutlined} from "@ant-design/icons";
 import { Form, Input, InputNumber, Select, Upload, Button, Switch, Card, Space, Typography, Image } from 'antd';
-import PageContent from '../../componentes/PageContent/PageContent';
-import { MedidaService } from "../../services/Medida";
-import { IngredienteService } from '../../services/Ingrediente';
-import { CategoriaService } from '../../services/Categoria';
+import PageContent from '../../../componentes/PageContent/PageContent';
+import { MedidaService } from "../../../services/Medida";
+import { IngredienteService } from '../../../services/Ingrediente';
+import { CategoriaService } from '../../../services/Categoria';
 import { getSession } from "next-auth/react";
-import { ReceitaService } from "../../services/Receita";
-import { IngredienteReceitaService } from '../../services/IngredienteReceita'
+import { ReceitaService } from "../../../services/Receita";
+import { IngredienteReceitaService } from '../../../services/IngredienteReceita'
 import { useRouter } from "next/router";
 import { InboxOutlined } from '@ant-design/icons';
 
