@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Head from "next/head"
+import Head from "next/head";
 import { Layout } from 'antd';
 import SideBar from '../SideBar/SideBar';
 import HeaderScreen from '../Header/Header';
@@ -8,13 +8,12 @@ import { useSession } from 'next-auth/react';
 
 const { Content } = Layout;
 
-
-const PageContent = ({ pageProps, headName, pageName, children}) => {
-  const [collapsed, setCollapsed] = useState(false);
+const PageContent = (props) => {
+  const { headName, pageName, children } = props;
+  const [collapsed, setCollapsed] = useState(true);
   const { data: session } = useSession();
   const isAuthenticated = session ? true : false
   const router = useRouter();
-  const tipoUser = 'admin'
 
   return (
     <Layout>
@@ -31,7 +30,7 @@ const PageContent = ({ pageProps, headName, pageName, children}) => {
         />
         <Content
           style={{
-            margin: '24px 16px',
+            margin: '24px 16px 24px 66px',
             padding: 24,
             minHeight: 600,
             background: 'white'

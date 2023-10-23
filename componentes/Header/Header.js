@@ -11,14 +11,30 @@ import { useSession } from 'next-auth/react';
 
 const { Header } = Layout;
 
-const HeaderScreen = ({ collapsed, setCollapsedCallback, pageName}) => {
+export default function HeaderScreen({ collapsed, setCollapsedCallback, pageName}) {
   const { data: session } = useSession();
   const isAuthenticated = session ? true : false
   const {
     token: { colorBgContainer },
   } = theme.useToken();
 
-  // Simule um usuário autenticado para este exemplo
+  const headerStyle = {
+    background: `url(/logoCompactoDark.png)`, // Defina a imagem do logo como plano de fundo
+    backgroundSize: '100% 80px', // Ajusta o tamanho da imagem para cobrir o cabeçalho
+    backgroundRepeat: 'no-repeat', // Não repete a imagem
+    backgroundPosition: 'center', // Centraliza a imagem
+
+    // O restante do seu estilo do cabeçalho permanece inalterado
+    padding: 0,
+    position: 'sticky',
+    top: 0,
+    zIndex: 1,
+    width: '100%',
+    borderBottom: '1px solid #f0f0f0',
+    // display: 'flex',
+    alignItems: 'center',
+    height: '80px'
+  };
   
 
   // Opções do menu de usuário
@@ -53,10 +69,7 @@ const HeaderScreen = ({ collapsed, setCollapsedCallback, pageName}) => {
 
   return (
     <Header
-      style={{
-        padding: 0,
-        background: colorBgContainer,
-      }}
+      style={headerStyle}
     >
       <Row align="middle" justify="space-between">
         <Col>
@@ -66,18 +79,19 @@ const HeaderScreen = ({ collapsed, setCollapsedCallback, pageName}) => {
             onClick={() => setCollapsedCallback(!collapsed)}
             style={{
               fontSize: '16px',
-              width: 64,
-              height: 64,
+              color: 'white',
+              width: 50,
+              height: 75,
             }}
           />
-          {pageName || ''}
+          <span style={{ color: 'white' }}>{pageName || ''}</span>
         </Col>
         <Row style={{paddingRight: '24px', gap: '8px', direction: 'revert', alignItems: 'center'}}>
-          <Typography >{(session && session?.user?.name) || 'Fazer Login'}</Typography>
+          <Typography style={{color: 'white'}}>{(session && session?.user?.name) || 'Fazer Login'}</Typography>
           <Dropdown overlay={userMenu} trigger={['click']}>
             <Button
               type="text"
-              icon={<Avatar size="small" icon={<UserOutlined />} />}
+              icon={<Avatar size="small" color='white' icon={<UserOutlined />} />}
             />
           </Dropdown>
         </Row>
@@ -87,4 +101,5 @@ const HeaderScreen = ({ collapsed, setCollapsedCallback, pageName}) => {
   );
 };
 
-export default HeaderScreen;
+// export default HeaderScreen;
+

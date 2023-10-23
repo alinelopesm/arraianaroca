@@ -1,11 +1,19 @@
 import React from 'react';
-import SignUp from '../signup'
-import { UsuarioService } from "../../services/Usuario"
-import convertImage64 from '../../helpers/convertImage64'
+import { useSession } from 'next-auth/react';
+import { useRouter } from "next/router";
+import SignUp from '../signup';
+import { UsuarioService } from "../../services/Usuario";
+import convertImage64 from '../../helpers/convertImage64';
+import AdminOnly from '../../componentes/PegeAlerts/NoAdmin';
 
 const method = 'editar'
+const TYPE_USER = process.env.NEXT_PUBLIC_TYPE_USER 
 
 const AlteracaoUsuario = ({usuario}) => {
+  const { data: session } = useSession();
+  const isAuthenticated = session ? true : false
+  const router = useRouter();
+
   const usuarioData = {
     codUsuario: usuario?.cod_usuario,
     nome: usuario?.nome,
@@ -17,7 +25,10 @@ const AlteracaoUsuario = ({usuario}) => {
   }
 
   return (
-    usuarioData && <SignUp usuarioData={usuarioData} />
+    isAuthenticated && ((session?.token?.sub === usuarioData.codUsuario) || TYPE_USER === 'admin') ?
+      usuarioData && <SignUp usuarioData={usuarioData} />
+    :
+    <AdminOnly />
   );
 };
 
