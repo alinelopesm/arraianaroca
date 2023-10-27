@@ -11,6 +11,8 @@ import { useSession } from 'next-auth/react';
 const user = 'admin'
 const PAGE_NAME = 'Listagem de Unidade de Medidas:'
 const HEAD_NAME = 'Unidade de Medidas'
+/* Pegar o tipo do usuario na variavel de ambiente */
+const TYPE_USER = process.env.NEXT_PUBLIC_TYPE_USER ;
 
 export default function Medidas() {
   const { data: session } = useSession();

@@ -40,8 +40,7 @@ const Home = () => {
   })
 
   return (
-    <PageContent headName={HEAD_NAME} pageName={PAGE_NAME}>
-      <CategorySlider categorias={listaCategorias} />
+    <PageContent headName={HEAD_NAME} pageName={PAGE_NAME} slider listas={listaCategorias}>
       <List
         style={{marginTop: '24px'}}
         grid={{

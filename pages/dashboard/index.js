@@ -4,6 +4,8 @@ import { useRouter } from "next/router";
 
 const PAGE_NAME = 'Dashboard'
 const HEAD_NAME = 'Receitas Gourmet'
+/* Pegar o tipo do usuario na variavel de ambiente */
+const TYPE_USER = process.env.NEXT_PUBLIC_TYPE_USER ;
 
 function Dashboard() {
   const { data: session } = useSession();

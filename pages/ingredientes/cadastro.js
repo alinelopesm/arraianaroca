@@ -13,6 +13,8 @@ import { useRouter } from "next/router";
 
 const PAGE_NAME = 'Cadastro de Ingrediente'
 const HEAD_NAME = 'Ingredientes'
+/* Pegar o tipo do usuario na variavel de ambiente */
+const TYPE_USER = process.env.NEXT_PUBLIC_TYPE_USER ;
 
 const method = 'editar'
 

@@ -10,8 +10,13 @@ function CategorySlider({ categorias }) {
   const [currentCategory, setCurrentCategory] = useState(0);
 
   return (
-    <Container style={{zIndex: 0}}>
-        <Carousel animation="slide" style={{zIndex: 0}}>
+    <Container style={{zIndex: 0, padding: 0}}>
+        <Carousel animation="slide" style={{zIndex: 0, cursor: 'pointer'}} fullHeightHover={false} navButtonsProps={{          // Change the colors and radius of the actual buttons. THIS STYLES BOTH BUTTONS
+        style: {
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          opacity: 1
+        }
+    }} >
           {categorias?.map((item, index) => (
               <Item key={index} item={item} />
           ))}

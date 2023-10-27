@@ -13,6 +13,8 @@ import { InboxOutlined } from '@ant-design/icons';
 
 const PAGE_NAME = 'Cadastro de Receitas'
 const HEAD_NAME = 'Receitas'
+/* Pegar o tipo do usuario na variavel de ambiente */
+const TYPE_USER = process.env.NEXT_PUBLIC_TYPE_USER ;
 
 const normFile = (e) => {
   if (Array.isArray(e)) {
