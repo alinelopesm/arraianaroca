@@ -28,7 +28,7 @@ export default function HeaderScreen({ collapsed, setCollapsedCallback, pageName
     padding: 0,
     position: 'sticky',
     top: 0,
-    zIndex: 1,
+    zIndex: 9999999999,
     width: '100%',
     borderBottom: '1px solid #f0f0f0',
     // display: 'flex',

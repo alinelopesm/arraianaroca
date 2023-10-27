@@ -41,15 +41,7 @@ const Home = () => {
 
   return (
     <PageContent headName={HEAD_NAME} pageName={PAGE_NAME}>
-      {/* <h1 style={{
-        fontSize: '36px',
-        fontWeight: 'bold',
-        color: '#ffffff',
-        backgroundColor: 'rgba(255, 169, 64, 0.5)',
-        padding: '10px',
-        textAlign: 'center',
-      }}>Receitas</h1> */}
-      <CategorySlider />
+      <CategorySlider categorias={listaCategorias} />
       <List
         style={{marginTop: '24px'}}
         grid={{
