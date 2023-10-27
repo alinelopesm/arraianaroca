@@ -3,6 +3,8 @@ import { MedidaService } from "../../services/Medida"
 import CadastroMedida from './cadastro';
 
 const method = 'editar'
+/* Pegar o tipo do usuario na variavel de ambiente */
+const TYPE_USER = process.env.NEXT_PUBLIC_TYPE_USER ;
 
 const AlteracaoMedida = ({medida}) => {
   const medidaData = medida

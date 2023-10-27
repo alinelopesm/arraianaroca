@@ -12,6 +12,8 @@ const { Meta } = Card;
 const user = 'admin'
 const PAGE_NAME = 'Perfil do usuário'
 const HEAD_NAME = 'Usuário'
+/* Pegar o tipo do usuario na variavel de ambiente */
+const TYPE_USER = process.env.NEXT_PUBLIC_TYPE_USER ;
 
 const Profile = ({userDataServer, minhasReceitas}) => {
   const { data: session } = useSession();

@@ -15,6 +15,8 @@ import { useRouter } from "next/router";
 
 const PAGE_NAME = 'Cadastro de usuário'
 const HEAD_NAME = 'Usuário'
+/* Pegar o tipo do usuario na variavel de ambiente */
+const TYPE_USER = process.env.NEXT_PUBLIC_TYPE_USER ;
 
 const formItemLayout = {
   labelCol: {

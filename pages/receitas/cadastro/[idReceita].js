@@ -9,6 +9,8 @@ import { IngredienteReceitaService } from '../../../services/IngredienteReceita'
 import convertImage64 from '../../../helpers/convertImage64'
 
 const method = 'editar'
+/* Pegar o tipo do usuario na variavel de ambiente */
+const TYPE_USER = process.env.NEXT_PUBLIC_TYPE_USER ;
 
 const AlteracaoReceita = ({ receita, ingredientes, userId, categoriaOptions, ingredientesOptions, medidasOptions }) => {
   const items = ingredientes || []

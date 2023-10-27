@@ -3,6 +3,8 @@ import CadastroIngrediente from './cadastro';
 import { IngredienteService } from "../../services/Ingrediente"
 
 const method = 'editar'
+/* Pegar o tipo do usuario na variavel de ambiente */
+const TYPE_USER = process.env.NEXT_PUBLIC_TYPE_USER ;
 
 const AlteracaoIngrediente = ({ingrediente}) => {
   const ingredienteData = {

@@ -1,61 +1,32 @@
 import { useEffect, useState } from "react";
-// import { Carousel, Button } from 'antd';
-import { CategoriaService } from "../../services/Categoria";
-import convertImage64 from '../../helpers/convertImage64';
-
-const listaCategorias = [
-  { category: 'Categoria 1', image: 'imagem1.jpg' },
-  { category: 'Categoria 2', image: 'imagem2.jpg' },
-  // Adicione mais categorias conforme necessário
-];
-
 import React from 'react';
+import { useRouter } from "next/router";
 import Carousel from 'react-material-ui-carousel';
 import { Paper, Button, Container, Grid, Typography } from '@mui/material';
+import convertImage64 from '../../helpers/convertImage64';
+import Link from 'next/link';
 
-const items = [
-  {
-    name: 'Item 1',
-    description: 'Descrição do Item 1',
-    image: 'url-da-imagem-1.jpg',
-  },
-  {
-    name: 'Item 2',
-    description: 'Descrição do Item 2',
-    image: 'url-da-imagem-2.jpg',
-  },
-  {
-    name: 'Item 3',
-    description: 'Descrição do Item 3',
-    image: 'url-da-imagem-3.jpg',
-  },
-];
-
-function MyCarousel(props) {
-    const [currentCategory, setCurrentCategory] = useState(0);
-    const [listaCategorias, setListaCategorias] = useState([]);
-  
-    useEffect(() => {
-        async function getCategorias() {
-          const categorias = await CategoriaService.listAll();
-          setListaCategorias(categorias);
-        }
-        getCategorias();
-      }, []);
+function CategorySlider({ categorias }) {
+  const [currentCategory, setCurrentCategory] = useState(0);
 
   return (
-    <Container style={{zIndex: 0}}>
-        <Carousel animation="slide">
-        {listaCategorias.map((item, index) => (
-            <Item key={index} item={item} />
-        ))}
+    <Container style={{zIndex: 0, padding: 0}}>
+        <Carousel animation="slide" style={{zIndex: 0, cursor: 'pointer'}} fullHeightHover={false} navButtonsProps={{          // Change the colors and radius of the actual buttons. THIS STYLES BOTH BUTTONS
+        style: {
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          opacity: 1
+        }
+    }} >
+          {categorias?.map((item, index) => (
+              <Item key={index} item={item} />
+          ))}
         </Carousel>
     </Container>
   );
 }
 
 function Item(props) {
-  console.log('Sou o que', props);
+  const router = useRouter();
   const imageStyle = {
     width: '100%', // Ajusta a largura da imagem para ocupar o container todo
     height: '300px', // Ajusta a altura da imagem para ocupar o container todo
@@ -81,14 +52,16 @@ function Item(props) {
   };
       
   return (
-    <Paper style={paperStyle}>
-      <img src={convertImage64(props.item.foto_categoria)} alt={props.item.name} style={imageStyle}/>
+    <Paper style={paperStyle} onClick={() => router.push(`/categorias/${props.item?.cod_categoria}`)}>
+      <Link href={`/categorias/${props.item.cod_categoria}`} passHref>
+      <img src={convertImage64(props.item.foto_categoria)} alt={props.item.nome} style={imageStyle}/>
       <div style={textContainerStyle}>
         <Typography variant="h5" style={titleStyle}>{props.item.nome}</Typography>
         <Typography variant="body1">{props.item.description}</Typography>
       </div>
+      </Link>
     </Paper>
   );
 }
 
-export default MyCarousel;
+export default CategorySlider;

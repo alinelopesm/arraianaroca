@@ -13,6 +13,8 @@ import convertImage64 from '../../helpers/convertImage64'
 const PAGE_NAME = 'Detalhes da Receita'
 const HEAD_NAME = 'Receitas'
 const method = 'editar'
+/* Pegar o tipo do usuario na variavel de ambiente */
+const TYPE_USER = process.env.NEXT_PUBLIC_TYPE_USER ;
 
 const { Title, Text } = Typography;
 
@@ -34,9 +36,9 @@ const ViewAlteracaoReceita = ({ receita, ingredientes, userId, categoriaOptions,
               <Tag color="green">Tempo de Preparo: {receitaData.tempo_preparo} min</Tag>
             </div>
           }
-          
+          style={{width: '100%'}}
         >
-          <Image src={receitaData.foto} alt={receitaData.nome_receita} />
+          <Image style={{padding:0 , margin: 0}} src={receitaData.foto} alt={receitaData.nome_receita} width='100%' height='300px' />
           <Divider />
           <Title level={3}>Ingredientes:</Title>
           <List

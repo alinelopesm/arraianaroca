@@ -40,7 +40,7 @@ const SideBar = ({ collapsed, isAuthenticated }) => {
         left: 0,
         top: '72px',
         bottom: 0,
-        zIndex: 1,
+        zIndex: 9999999999,
 
       }}
     >

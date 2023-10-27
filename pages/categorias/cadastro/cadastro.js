@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import PageContent from '../../componentes/PageContent/PageContent';
+import PageContent from '../../../componentes/PageContent/PageContent';
 import { InboxOutlined } from '@ant-design/icons';
 import {
   Button,
@@ -10,11 +10,13 @@ import {
   message,
   Image
 } from 'antd';
-import { CategoriaService } from "../../services/Categoria"
+import { CategoriaService } from "../../../services/Categoria"
 import { useRouter } from "next/router";
 
 const PAGE_NAME = 'Cadastro de Categorias'
 const HEAD_NAME = 'Categorias'
+/* Pegar o tipo do usuario na variavel de ambiente */
+const TYPE_USER = process.env.NEXT_PUBLIC_TYPE_USER ;
 
 const method = 'editar'
 

@@ -5,6 +5,7 @@ import SideBar from '../SideBar/SideBar';
 import HeaderScreen from '../Header/Header';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
+import CategorySlider from '../Carrousel/CategorySlider'
 
 const { Content } = Layout;
 
@@ -28,6 +29,15 @@ const PageContent = (props) => {
           pageName={pageName}
           isAuthenticated={isAuthenticated}
         />
+        { props.slider && 
+          <div 
+          style={{
+            width: '100%',
+            margin: '24px 0',
+            padding: '0 0 0 48px',
+          }} >
+            <CategorySlider categorias={props.listas} />
+          </div>}
         <Content
           style={{
             margin: '24px 16px 24px 66px',
