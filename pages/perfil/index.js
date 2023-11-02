@@ -1,5 +1,3 @@
-import { Card, Avatar, Button, List, Modal, Image, Flex, Segmented  } from 'antd';
-import { EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { useSession } from 'next-auth/react';
 import { UsuarioService } from "../../services/Usuario"
 import { getSession } from "next-auth/react";
@@ -7,16 +5,19 @@ import PageContent from "../../componentes/PageContent/PageContent";
 import convertImage64 from '../../helpers/convertImage64'
 import { useRouter } from "next/router";
 import { ReceitaService } from "../../services/Receita"
+import { CategoriaService } from "../../services/Categoria"
+import { EditOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons';
+import { Card, Avatar, Button, List, Modal, Image, Flex, Divider, Row  } from 'antd';
 
 const { Meta } = Card;
-const user = 'admin'
 const PAGE_NAME = 'Perfil do usuário'
 const HEAD_NAME = 'Usuário'
 /* Pegar o tipo do usuario na variavel de ambiente */
 const TYPE_USER = process.env.NEXT_PUBLIC_TYPE_USER ;
 
-const Profile = ({userDataServer, minhasReceitas}) => {
+const Profile = ({userDataServer, minhasReceitas, listaCategorias}) => {
   const { data: session } = useSession();
+  const isAuthenticated = session ? true : false;
   const router = useRouter();
   const user = {
     name: userDataServer.nome,
@@ -31,42 +32,75 @@ const Profile = ({userDataServer, minhasReceitas}) => {
 
   return (
     <PageContent headName={HEAD_NAME} pageName={PAGE_NAME}>
-      <Card
-        style={{ width: 300 }}
-        cover={<Image
-          width="100%"
+      <Card 
+        style={{ height: 250 }}
+        cover={user?.imageUrl ? <Image
+          width="20%"
+          height={ 150 }
           src={user?.imageUrl}
-        />}
-        actions={[
-          <Button icon={<EditOutlined />} onClick={editProfile}>
-            Editar Perfil
-          </Button>
-        ]}
-      >
-        <Meta title={user.name} />
-        <Meta title={user.email} />
-      </Card>
-
-     
+        /> : null} 
+        title={`${user.name} - Email: ${user.email}`} 
+        extra={<a href={`/usuarios/${userDataServer.cod_usuario}`}>Editar Perfil</a>}
+      />
+      
       <Flex style={{ width: '100%', marginTop: '48px' }} justify="space-between" align="center">
         <span style={{ fontSize: '20px' }} >Minhas receitas</span>
         <Button onClick={() => router.push(`/receitas/cadastro`)} style={{ background: '#1677ff', color: 'white', width: '20%' }} type="primary" icon={<PlusOutlined />}>
           Adicionar Receita
         </Button>
       </Flex>
-
-      <List
-        dataSource={user.receitas}
-        renderItem={receita => (
-          <List.Item>
-            <List.Item.Meta title={`${receita.cod_receita} - ${receita.nome_receita}`} />
-            <List.Item.Meta title={receita.title} />
-            <Button onClick={() => router.push(`/receitas/${receita.cod_receita}`)} style={{ position: 'fixed', right: '40px' }} icon={<EditOutlined/>}>Editar</Button>
-          </List.Item>
-        )}
-      />
-
+      <Divider />
       
+      
+      <Row gutter={16}>
+        <List
+          style={{marginTop: '-16px'}}
+          grid={{
+            gutter: 8,
+            xs: 1,
+            sm: 2,
+            md: 2,
+            lg: 4,
+            xl: 4,
+            xxl: 3,
+          }}
+          header={`${user?.receitas?.length ? `${user?.receitas?.length} Receitas encontradas`: ''}`}
+          dataSource={user?.receitas}
+          renderItem={(item) => (
+            <List.Item >
+              <Card
+                // title={item.nome_receita}
+                hoverable={TYPE_USER !== 'admin'}// Defina a altura do Card
+                cover={
+                  convertImage64(item?.foto) !== '' ?
+                  <img
+                    alt="example"
+                    src={convertImage64(item?.foto)}
+                    style={{
+                      width: '100%', // Defina a largura da imagem como 100%
+                      height: '200px', // Defina a altura da imagem como 100%
+                    }}
+                  /> : null
+                }
+                onClick={() => !isAuthenticated || TYPE_USER !== 'admin' ? router.push(`/receitas/${item?.cod_receita}`) : null}
+                actions={isAuthenticated  && TYPE_USER === 'admin' ? [
+                  <EditOutlined key="edit" onClick={() => router.push(`/receitas/cadastro/${item?.cod_receita}`)}/>, 
+                  <EyeOutlined key="view" onClick={() => router.push(`/receitas/${item?.cod_receita}`)}/>
+                ]:[
+                  <EyeOutlined key="view" onClick={() => router.push(`/receitas/${item?.cod_receita}`)}/>
+                ]}
+                size="small"
+              >
+                <Meta
+                  avatar={<Avatar >{item?.tempo_preparo} Min</Avatar>}
+                  title={item.nome_receita}
+                  description={`Categoria: ${listaCategorias?.find((categ) => categ.cod_categoria === item.cod_categoria)?.nome}` || ''}
+                />
+              </Card>
+            </List.Item>
+          )}
+        />
+      </Row>
     </PageContent>
   );
 };
@@ -75,8 +109,9 @@ export default Profile;
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
+  let minhasReceitas = []
 
-  if (!session) {
+  if (!session || (!session.user.id && !session?.token?.sub)) {
     return {
       redirect: {
         destination: "/api/auth/signin", // Redirecionar para a página de login se o usuário não estiver autenticado
@@ -85,17 +120,22 @@ export async function getServerSideProps(context) {
     };
   }
 
+  const userIdServer = session.user.id || session?.token?.sub
   const response = await UsuarioService.get(session?.token?.sub);
   const userDataServer = response[0] || {}
 
   const receitas = await ReceitaService.listAll()
-  const minhasReceitas = receitas?.filter((item) => item.cod_usuario === userDataServer.cod_usuario)
-  console.log('Sou receitas', minhasReceitas);
+  if(receitas && userDataServer?.cod_usuario) {
+    minhasReceitas = receitas?.filter((item) => item.cod_usuario === userDataServer?.cod_usuario)
+  }
+
+  const listaCategorias = await CategoriaService.listAll();
 
   return {
     props: {
       userDataServer,
-      minhasReceitas
+      minhasReceitas,
+      listaCategorias
     },
   };
 }

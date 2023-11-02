@@ -9,8 +9,8 @@ import {
   message,
   Image
 } from 'antd';
-import { UsuarioService } from "../../services/Usuario"
-import PageContent from '../../componentes/PageContent/PageContent';
+import { UsuarioService } from "../../../services/Usuario"
+import PageContent from '../../../componentes/PageContent/PageContent';
 import { useRouter } from "next/router";
 
 const PAGE_NAME = 'Cadastro de usuário'
@@ -56,7 +56,7 @@ const tailFormItemLayout = {
     },
   },
 };
-const SignUp = ({ pageProps, usuarioData }) => {
+const AlteracaoUsuarioDetails = ({ pageProps, usuarioData, isUserOwner }) => {
   const router = useRouter();
   const [form] = Form.useForm();
 
@@ -84,10 +84,10 @@ const SignUp = ({ pageProps, usuarioData }) => {
     delete values['confirm-senha']
     
     let payload = {
-      nome: values?.nome,
-      email: values?.email,
-      senha: values?.senha,
-      telefone: values?.telefone,
+      nome: usuarioData?.nome,
+      email: usuarioData?.email || '',
+      senha: usuarioData?.senha,
+      telefone: usuarioData?.telefone,
     };
 
     if(usuarioData?.codUsuario) {
@@ -98,18 +98,15 @@ const SignUp = ({ pageProps, usuarioData }) => {
       const id = usuarioData?.codUsuario
       const edicaoUser = await UsuarioService.update(payload, id);
 
-      if (edicaoUser) router.push('/usuarios', usuarioData)
-      return
-    }
-
-    const cadastroUser = await UsuarioService.create(payload)
-    if (cadastroUser) {
-      if (TYPE_USER === 'admin') {
-        router.push('/usuarios')
-        return
+      if (edicaoUser) {
+        if (TYPE_USER === 'admin') {
+          router.push('/usuarios')
+          return
+        }
+        
+        router.push('/perfil')
       }
-      router.push('/api/auth/signin')
-
+      return
     }
   };
   
@@ -247,4 +244,4 @@ const SignUp = ({ pageProps, usuarioData }) => {
     </PageContent>
   );
 };
-export default SignUp;
+export default AlteracaoUsuarioDetails;

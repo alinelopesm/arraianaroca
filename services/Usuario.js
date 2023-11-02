@@ -9,7 +9,7 @@ export const UsuarioService = {
     listAll(){
         return Api.get(endPoint)
     },
-    create(novoUsuario){
+    create(novoUsuario) {
         return Api.post(endPoint, novoUsuario)
     },
     update(payload, id){

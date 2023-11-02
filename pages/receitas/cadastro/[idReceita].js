@@ -12,7 +12,7 @@ const method = 'editar'
 /* Pegar o tipo do usuario na variavel de ambiente */
 const TYPE_USER = process.env.NEXT_PUBLIC_TYPE_USER ;
 
-const AlteracaoReceita = ({ receita, ingredientes, userId, categoriaOptions, ingredientesOptions, medidasOptions }) => {
+const AlteracaoReceita = ({ receita, ingredientes, userIdServer, categoriaOptions, ingredientesOptions, medidasOptions }) => {
   const items = ingredientes || []
   const foto = convertImage64(receita?.foto)
   const receitaData = {...receita, items, foto}
@@ -21,7 +21,7 @@ const AlteracaoReceita = ({ receita, ingredientes, userId, categoriaOptions, ing
     receitaData && 
       <CadastroReceita 
         receitaData={receitaData} 
-        userId={userId}
+        userIdServer={userIdServer}
         categoriaOptions={categoriaOptions}
         ingredientesOptions={ingredientesOptions}
         medidasOptions={medidasOptions}
@@ -35,7 +35,7 @@ export async function getServerSideProps(context) {
   const { idReceita } = context.params; 
   const session = await getSession(context);
 
-  if (!session) {
+  if (!session || (!session.user.id && !session?.token?.sub)) {
     return {
       redirect: {
         destination: "/api/auth/signin", // Redirecionar para a página de login se o usuário não estiver autenticado
@@ -44,7 +44,7 @@ export async function getServerSideProps(context) {
     };
   }
 
-  const userId = session?.token?.sub
+  const userIdServer = session.user.id || session?.token?.sub || null
   const listaCategorias = await CategoriaService.listAll();
   const listaIngredientes = await IngredienteService.listAll();
   const listaMedidas = await MedidaService.listAll();
@@ -69,7 +69,7 @@ export async function getServerSideProps(context) {
 
   return {
     props: {
-      userId,
+      userIdServer,
       categoriaOptions,
       ingredientesOptions,
       medidasOptions,

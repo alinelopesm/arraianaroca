@@ -38,14 +38,14 @@ export default function Receitas() {
   return (
     <PageContent headName={HEAD_NAME} pageName={PAGE_NAME} >
       <Row gutter={16} justify='end'>
-      {isAuthenticated &&
-        <Button
-          style={{background: '#d48806', color: 'white' }}
-          onClick={() => router.push('/receitas/cadastro')}
-        >
-          Cadastrar Nova Receita
-        </Button>
-      }
+        {isAuthenticated &&
+          <Button
+            style={{background: '#d48806', color: 'white', zIndex: 3 }}
+            onClick={() => router.push('/receitas/cadastro')}
+          >
+            Cadastrar Nova Receita
+          </Button>
+        }
       </Row>
       
       <Row gutter={16}>
@@ -65,7 +65,6 @@ export default function Receitas() {
           renderItem={(item) => (
             <List.Item >
               <Card
-                // title={item.nome_receita}
                 hoverable={TYPE_USER !== 'admin'}// Defina a altura do Card
                 cover={
                   <img
@@ -78,10 +77,10 @@ export default function Receitas() {
                   />
                 }
                 onClick={() => !isAuthenticated || TYPE_USER !== 'admin' ? router.push(`/receitas/${item?.cod_receita}`) : null}
-                actions={isAuthenticated  && TYPE_USER === 'admin' ? [
+                actions={isAuthenticated  && (TYPE_USER === 'admin' || session?.user?.id === item.cod_usuario) ? [
                   <EditOutlined key="edit" onClick={() => router.push(`/receitas/cadastro/${item?.cod_receita}`)}/>, 
                   <EyeOutlined key="view" onClick={() => router.push(`/receitas/${item?.cod_receita}`)}/>
-                ]: null}
+                ]: <EyeOutlined key="view" onClick={() => router.push(`/receitas/${item?.cod_receita}`)}/>}
                 size="small"
               >
                 <Meta

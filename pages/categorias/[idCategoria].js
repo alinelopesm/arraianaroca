@@ -6,6 +6,7 @@ import { ReceitaService } from "../../services/Receita";
 import convertImage64 from '../../helpers/convertImage64'
 import PageContent from "../../componentes/PageContent/PageContent";
 import { Row, Button, Avatar, List, Card, Typography, Image, Divider } from "antd";
+import { EditOutlined, EyeOutlined } from '@ant-design/icons';
 
 const method = 'editar'
 const { Meta } = Card;
@@ -26,13 +27,10 @@ const AlteracaoCategoria = ({categoria, receitasFilter}) => {
     imagePath: categoria?.foto_categoria,
     imagePreview: convertImage64(categoria?.foto_categoria)
   }
-
-  console.log('receitasFilter', receitasFilter);
-
   return (
     <PageContent headName={HEAD_NAME} pageName={PAGE_NAME} >
       <Title level={3}>Categoria: {categoriaData.nome}</Title>
-      <Image style={{padding:0 , margin: 0}} src={categoriaData.imagePreview} alt={categoriaData.nome} width='100%' height='300px' />
+      <Image preview={false} style={{padding:0 , margin: 0}} src={categoriaData.imagePreview} alt={categoriaData.nome} width='100%' height='300px' />
       <Divider />
       
       <Row gutter={16}>
@@ -52,7 +50,6 @@ const AlteracaoCategoria = ({categoria, receitasFilter}) => {
           renderItem={(item) => (
             <List.Item >
               <Card
-                // title={item.nome_receita}
                 hoverable={TYPE_USER !== 'admin'}// Defina a altura do Card
                 cover={
                   <img
@@ -68,7 +65,9 @@ const AlteracaoCategoria = ({categoria, receitasFilter}) => {
                 actions={isAuthenticated  && TYPE_USER === 'admin' ? [
                   <EditOutlined key="edit" onClick={() => router.push(`/receitas/cadastro/${item?.cod_receita}`)}/>, 
                   <EyeOutlined key="view" onClick={() => router.push(`/receitas/${item?.cod_receita}`)}/>
-                ]: null}
+                ]:[
+                  <EyeOutlined key="view" onClick={() => router.push(`/receitas/${item?.cod_receita}`)}/>
+                ]}
                 size="small"
               >
                 <Meta

@@ -23,7 +23,7 @@ const normFile = (e) => {
   return e?.fileList;
 };
 
-const CadastroReceita = ({ receitaData, userId, categoriaOptions, ingredientesOptions, medidasOptions}) => {
+const CadastroReceita = ({ receitaData, userIdServer, categoriaOptions, ingredientesOptions, medidasOptions}) => {
   const router = useRouter();
   const [form, setForm] = Form.useForm();
   const [categorias] = useState(categoriaOptions);
@@ -38,9 +38,6 @@ const CadastroReceita = ({ receitaData, userId, categoriaOptions, ingredientesOp
     imagePreview: dataReceita?.foto,
     onChange(info) {
       const { status } = info.file;
-      if (status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
       if (status === 'done') {
         message.success(`${info.file.name} file uploaded successfully.`);
         setImagePreview(imagePath= `${info.file.thumbUrl}`)
@@ -59,7 +56,7 @@ const CadastroReceita = ({ receitaData, userId, categoriaOptions, ingredientesOp
     const imagePreview = `${file}`
 
     const payloadReceita = {
-      cod_usuario: userId,
+      cod_usuario: userIdServer,
       cod_categoria: values.cod_categoria,
       foto: imagePreview,
       nome_receita: values.nome_receita,
@@ -136,7 +133,7 @@ const CadastroReceita = ({ receitaData, userId, categoriaOptions, ingredientesOp
         <Form.Item
           label="Codigo Usuário"
           name="cod_usuario"
-          initialValue={dataReceita?.cod_usuario || userId}
+          initialValue={dataReceita?.cod_usuario || userIdServer}
         >
           <Input disabled />
         </Form.Item>
@@ -266,7 +263,7 @@ export default CadastroReceita;
 export async function getServerSideProps(context) {
   const session = await getSession(context);
 
-  if (!session) {
+  if (!session || (!session.user.id && !session?.token?.sub)) {
     return {
       redirect: {
         destination: "/api/auth/signin", // Redirecionar para a página de login se o usuário não estiver autenticado
@@ -275,7 +272,7 @@ export async function getServerSideProps(context) {
     };
   }
 
-  const userId = session?.token?.sub
+  const userIdServer = session.user.id || session?.token?.sub
   const listaCategorias = await CategoriaService.listAll();
   const listaIngredientes = await IngredienteService.listAll();
   const listaMedidas = await MedidaService.listAll();
@@ -294,7 +291,7 @@ export async function getServerSideProps(context) {
 
   return {
     props: { 
-      userId,
+      userIdServer,
       categoriaOptions,
       ingredientesOptions,
       medidasOptions,

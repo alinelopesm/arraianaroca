@@ -73,7 +73,9 @@ const Home = () => {
               actions={isAuthenticated  && TYPE_USER === 'admin' ? [
                 <EditOutlined key="edit" onClick={() => router.push(`/receitas/cadastro/${item?.cod_receita}`)}/>, 
                 <EyeOutlined key="view" onClick={() => router.push(`/receitas/${item?.cod_receita}`)}/>
-              ]: null}
+              ]:[
+                <EyeOutlined key="view" onClick={() => router.push(`/receitas/${item?.cod_receita}`)}/>
+              ]}
               size="small"
             >
               <Meta
