@@ -1,48 +1,56 @@
 import React, { useState, useEffect } from "react";
-import { useSession } from 'next-auth/react';
 import { useRouter } from "next/router";
-import { Card, List, Avatar } from 'antd';
+import { useSession } from 'next-auth/react';
+import { Row, Button, Avatar, List, Card, Typography } from "antd";
 import { EditOutlined, EyeOutlined } from '@ant-design/icons';
-import { ReceitaService } from "../services/Receita";
-import { CategoriaService } from "../services/Categoria";
-import PageContent from '../componentes/PageContent/PageContent';
-import convertImage64 from '../helpers/convertImage64';
+import PageContent from "../../componentes/PageContent/PageContent";
+import { ReceitaService } from "../../services/Receita";
+import { CategoriaService } from "../../services/Categoria";
+import convertImage64 from '../../helpers/convertImage64';
 
 const { Meta } = Card;
-const PAGE_NAME = 'Home';
-const HEAD_NAME = 'Receitas Gourmet';
+const { Title } = Typography;
+const PAGE_NAME = 'Listagem de Receitas';
+const HEAD_NAME = 'Receitas';
 /* Pegar o tipo do usuario na variavel de ambiente */
 const TYPE_USER = process.env.NEXT_PUBLIC_TYPE_USER ;
 
-const Home = () => {
-  /*  Consome as sessões e rotas */
+export default function Receitas() {
   const { data: session } = useSession();
   const isAuthenticated = session ? true : false;
+
   const router = useRouter();
-
-  /*  Carrega lista de receitas */
   const [listaReceitas, setListaReceitas] = useState([]);
-  const [listaCategorias, setlistaCategorias] = useState([]);
-  
-  useEffect(() => {
-    /*  Busca lista de receitas  ao carregar a tela*/
-    async function getReceitas() {
-      /**Busca Receitas */
-      const receitas = await ReceitaService.listAll();
-      setListaReceitas(receitas)
+  const [listaCategorias, setlistaCategorias] = useState([])
 
-      /**Busca Categorias */
+  useEffect(() => {
+    async function getReceitas() {
+      const receitas = await ReceitaService.listAll();
+      setListaReceitas(receitas);
+
       const categorias = await CategoriaService.listAll();
       setlistaCategorias(categorias);
     }
-    getReceitas()
+    
+    getReceitas();
   })
 
   return (
-    <PageContent headName={HEAD_NAME} pageName={PAGE_NAME} slider listas={listaCategorias}>
-      {listaReceitas && 
+    <PageContent headName={HEAD_NAME} pageName={PAGE_NAME} >
+      <Row gutter={16} justify='end'>
+        {isAuthenticated &&
+          <Button
+            style={{background: '#d48806', color: 'white', zIndex: 3 }}
+            onClick={() => router.push('/receitas/cadastro')}
+          >
+            Cadastrar Nova Receita
+          </Button>
+        }
+      </Row>
+      
+      <Row gutter={16}>
         <List
-          style={{marginTop: '24px'}}
+          style={{marginTop: '-36px'}}
           grid={{
             gutter: 8,
             xs: 1,
@@ -50,14 +58,13 @@ const Home = () => {
             md: 2,
             lg: 4,
             xl: 4,
-            xxl: 6,
+            xxl: 3,
           }}
-          header={`${listaReceitas?.length ? `${listaReceitas?.length} Receitas encontradas`: ''}`}
+          header={`${listaReceitas.length ? `${listaReceitas?.length} Receitas encontradas`: ''}`}
           dataSource={listaReceitas}
           renderItem={(item) => (
             <List.Item >
               <Card
-                // title={item.nome_receita}
                 hoverable={TYPE_USER !== 'admin'}// Defina a altura do Card
                 cover={
                   <img
@@ -70,26 +77,23 @@ const Home = () => {
                   />
                 }
                 onClick={() => !isAuthenticated || TYPE_USER !== 'admin' ? router.push(`/receitas/${item?.cod_receita}`) : null}
-                actions={isAuthenticated  && TYPE_USER === 'admin' ? [
+                actions={isAuthenticated  && (TYPE_USER === 'admin' || session?.user?.id === item.cod_usuario) ? [
                   <EditOutlined key="edit" onClick={() => router.push(`/receitas/cadastro/${item?.cod_receita}`)}/>, 
                   <EyeOutlined key="view" onClick={() => router.push(`/receitas/${item?.cod_receita}`)}/>
-                ]:[
-                  <EyeOutlined key="view" onClick={() => router.push(`/receitas/${item?.cod_receita}`)}/>
-                ]}
+                ]: <EyeOutlined key="view" onClick={() => router.push(`/receitas/${item?.cod_receita}`)}/>}
                 size="small"
               >
                 <Meta
                   avatar={<Avatar >{item?.tempo_preparo} Min</Avatar>}
-                  title={item?.nome_receita}
+                  title={item.nome_receita}
                   description={`Categoria: ${listaCategorias?.find((cat) => cat?.cod_categoria === item?.cod_categoria)?.nome}` || ''}
                 />
               </Card>
             </List.Item>
           )}
         />
-      }
+      </Row>
     </PageContent>
-  );
-};
+  )
+}
 
-export default Home;
