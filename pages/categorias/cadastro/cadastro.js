@@ -58,12 +58,8 @@ const CadastroCategoria = ({categoriaData}) => {
     imagePreview: categoriaForm?.imagePreview,
     onChange(info) {
       const { status } = info.file;
-      if (status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
       if (status === 'done') {
         message.success(`${info.file.name} file uploaded successfully.`);
-        console.log('como estou', info);
         setImagePreview(imagePath= `${info.file.thumbUrl}`)
       } else if (status === 'error') {
         message.error(`${info.file.name} file upload failed.`);
@@ -87,8 +83,6 @@ const CadastroCategoria = ({categoriaData}) => {
     if(categoriaData?.codCategoria) {
       const id = categoriaData?.codCategoria
       const edicaoCategoria = await CategoriaService.update(payload, id);
-      console.log('fui alterar', edicaoCategoria);
-
       if (edicaoCategoria) router.push('/categorias')
       return
     }

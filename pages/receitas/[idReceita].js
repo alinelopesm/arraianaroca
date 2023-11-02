@@ -18,16 +18,15 @@ const TYPE_USER = process.env.NEXT_PUBLIC_TYPE_USER ;
 
 const { Title, Text } = Typography;
 
-const ViewAlteracaoReceita = ({ receita, ingredientes, userId, categoriaOptions, ingredientesOptions, medidasOptions }) => {
+const ViewAlteracaoReceita = ({ receita, ingredientes, userIdServer, categoriaOptions, ingredientesOptions, medidasOptions }) => {
   const items = ingredientes || []
   const foto = convertImage64(receita?.foto)
   const receitaData = {...receita, items, foto}
-  const categoria = categoriaOptions.find((categ) => categ.value === receitaData.cod_categoria).label
-  console.log('receitaData', receitaData);
+  const categoria = categoriaOptions.find((categ) => categ.value === receitaData.cod_categoria).label;
 
   return (
     <PageContent headName={HEAD_NAME} pageName={PAGE_NAME}>
-      <div style={{ maxWidth: "800px", margin: "0 auto" }}>
+      <div style={{ maxWidth: "100%", margin: "0 auto" }}>
         <Card
           title={receitaData.nome_receita}
           extra={
@@ -38,7 +37,7 @@ const ViewAlteracaoReceita = ({ receita, ingredientes, userId, categoriaOptions,
           }
           style={{width: '100%'}}
         >
-          <Image style={{padding:0 , margin: 0}} src={receitaData.foto} alt={receitaData.nome_receita} width='100%' height='300px' />
+          <Image style={{padding:0 , margin: 0}} src={receitaData.foto} alt={receitaData.nome_receita} width='20%' height='300px' />
           <Divider />
           <Title level={3}>Ingredientes:</Title>
           <List
@@ -68,16 +67,7 @@ export async function getServerSideProps(context) {
   const { idReceita } = context.params; 
   const session = await getSession(context);
 
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/api/auth/signin", // Redirecionar para a página de login se o usuário não estiver autenticado
-        permanent: false,
-      },
-    };
-  }
-
-  const userId = session?.token?.sub
+  const userIdServer = session?.user?.id || session?.token?.sub || null
   const listaCategorias = await CategoriaService.listAll();
   const listaIngredientes = await IngredienteService.listAll();
   const listaMedidas = await MedidaService.listAll();
@@ -102,7 +92,7 @@ export async function getServerSideProps(context) {
 
   return {
     props: {
-      userId,
+      userIdServer,
       categoriaOptions,
       ingredientesOptions,
       medidasOptions,

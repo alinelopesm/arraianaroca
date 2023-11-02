@@ -14,29 +14,28 @@ export default NextAuth({
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        username: { label: "Usuário", type: "text" },
+        email: { label: "email", type: "email" },
         password: {  label: "Senha",  type: "password" },
       },
       authorize: async (credentials) => {
         // Faça a validação do usuário usando seu serviço de usuário
         const usuarios = await UsuarioService.listAll();
         const userAdapter = await usuarios.find(
-          (u) => u.nome === credentials.username
+          (u) => u.email === credentials.email
         );
-        console.log('user', userAdapter);
 
-        if (userAdapter) {
-          if (userAdapter.senha === credentials.password) {
-            const user = {
-              id: userAdapter.cod_usuario,
-              name: userAdapter.nome, // Use userAddapter instead of user
-              email: userAdapter.email,
-              image: userAdapter.foto_usuario || '',
-              token: credentials.csrfToken,
-              type: userAdapter.tipo,
-            }
-            return Promise.resolve(user);
+        
+        if (userAdapter && userAdapter.senha === credentials.password) {
+          const user = {
+            id: userAdapter?.cod_usuario,
+            name: userAdapter?.nome || userAdapter?.email, // Use userAddapter instead of user
+            email: userAdapter?.email,
+            image: userAdapter?.foto_usuario || '',
+            token: credentials?.csrfToken,
+            type: userAdapter?.tipo || '',
+            sub: userAdapter?.cod_usuario,
           }
+          return Promise.resolve(user);
         } else {
           return Promise.resolve(null);
         }
@@ -50,23 +49,10 @@ export default NextAuth({
     secret: process.env.NEXTAUTH_SECRET,
   },
   callbacks: {
-    async signIn({ credentials }) {
-      if(credentials.csrfToken && credentials.username) {
-        return true
-      }
-      return false
-    },
-    async redirect({ baseUrl }) {
-      return baseUrl
-    },
     async session({ session, token, user }) {
-      session.token = token
-      // session.user.id = user.id;
-      // session.user.type = user.type;
-      return session
+      session.token = token;
+      session.user.id = token.sub;
+      return session;
     },
-    async jwt({ token }) {
-      return token
-    }
   }
 });

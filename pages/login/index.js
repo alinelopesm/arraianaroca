@@ -19,7 +19,6 @@ export default function LoginPage() {
     const user = await authenticateUser(values.username, values.password);
 
     if (user) {
-      console.log('ser', user);
       // Autenticação bem-sucedida, chame a função login do contexto de autenticação
       login();
 

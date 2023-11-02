@@ -15,6 +15,7 @@ import ActiveLink from '../Router/ActiveLink';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
+const TYPE_USER = process.env.NEXT_PUBLIC_TYPE_USER ;
 
 const SideBar = ({ collapsed, isAuthenticated }) => {
 
@@ -27,12 +28,6 @@ const SideBar = ({ collapsed, isAuthenticated }) => {
       theme="light"
       breakpoint="lg"
       collapsedWidth="50"
-      onBreakpoint={(broken) => {
-        console.log(broken);
-      }}
-      onCollapse={(collapsed, type) => {
-        console.log(collapsed, type);
-      }}
       style={{
         overflow: 'auto',
         height: '100vh',
@@ -46,7 +41,7 @@ const SideBar = ({ collapsed, isAuthenticated }) => {
     >
       <div className="demo-logo-vertical" />
       <Menu theme="light" mode="inline" defaultSelectedKeys={['1']}>
-        <Menu.Item key="home" icon={<HomeOutlined />}>
+        <Menu.Item key="home" icon={<HomeOutlined />} itemHoverBg='#ffffff'>
           <ActiveLink href="/">Home</ActiveLink>
         </Menu.Item>
         {isAuthenticated &&
@@ -62,7 +57,7 @@ const SideBar = ({ collapsed, isAuthenticated }) => {
           <Menu.Item key="lista-receitas">
             <ActiveLink href="/receitas">Listagem</ActiveLink>
           </Menu.Item>
-          {isAuthenticated &&
+          {isAuthenticated && TYPE_USER === 'admin' &&
             <Menu.Item key="cadastro-receita" icon={<PlusOutlined />}>
               <ActiveLink href="/receitas/cadastro">Cadastro</ActiveLink>
             </Menu.Item>
@@ -78,7 +73,7 @@ const SideBar = ({ collapsed, isAuthenticated }) => {
           <Menu.Item key="lista-categorias">
             <ActiveLink href="/categorias">Listagem</ActiveLink>
           </Menu.Item>
-          {isAuthenticated &&
+          {isAuthenticated && TYPE_USER === 'admin' &&
             <Menu.Item key="cadastro-categoria" icon={<PlusOutlined />}>
               <ActiveLink href="/categorias/cadastro">Cadastro</ActiveLink>
             </Menu.Item>
@@ -86,39 +81,39 @@ const SideBar = ({ collapsed, isAuthenticated }) => {
         </SubMenu>
 
         {/* Menu Principal: Medidas */}
-        <SubMenu
-          key="medidas"
-          icon={<ContainerOutlined />}
-          title="Medidas"
-        >
-          <Menu.Item key="lista-medidas">
-            <ActiveLink href="/medidas">Listagem</ActiveLink>
-          </Menu.Item>
-          {isAuthenticated &&
+        { isAuthenticated && TYPE_USER === 'admin' &&
+          <SubMenu
+            key="medidas"
+            icon={<ContainerOutlined />}
+            title="Medidas"
+          >
+            <Menu.Item key="lista-medidas">
+              <ActiveLink href="/medidas">Listagem</ActiveLink>
+            </Menu.Item>
             <Menu.Item key="cadastro-medida" icon={<PlusOutlined />}>
               <ActiveLink href="/medidas/cadastro">Cadastro</ActiveLink>
             </Menu.Item>
-          }
-        </SubMenu>
+          </SubMenu>
+        }
 
         {/* Menu Principal: Ingredientes */}
-        <SubMenu
-          key="ingredientes"
-          icon={<UnorderedListOutlined />}
-          title="Ingredientes"
-        >
-          <Menu.Item key="lista-ingredientes">
-            <ActiveLink href="/ingredientes">Listagem</ActiveLink>
-          </Menu.Item>
-          {isAuthenticated &&
+        { isAuthenticated && TYPE_USER === 'admin' &&
+          <SubMenu
+            key="ingredientes"
+            icon={<UnorderedListOutlined />}
+            title="Ingredientes"
+          >
+            <Menu.Item key="lista-ingredientes">
+              <ActiveLink href="/ingredientes">Listagem</ActiveLink>
+            </Menu.Item>
             <Menu.Item key="cadastro-ingrediente" icon={<PlusOutlined />}>
               <ActiveLink href="/ingredientes/cadastro">Cadastro</ActiveLink>
             </Menu.Item>
-          }
-        </SubMenu>
+          </SubMenu>
+        }
 
         {/* Menu Principal: Usuários */}
-        {isAuthenticated && <SubMenu
+        {isAuthenticated && isAuthenticated && TYPE_USER === 'admin' && <SubMenu
             key="usuarios"
             icon={<UserOutlined />}
             title="Usuários"

@@ -7,8 +7,7 @@ const method = 'editar'
 const TYPE_USER = process.env.NEXT_PUBLIC_TYPE_USER ;
 
 const AlteracaoMedida = ({medida}) => {
-  const medidaData = medida
-  console.log('Sou?', medidaData);
+  const medidaData = medida;
 
   return (
     medidaData && <CadastroMedida medidaData={medidaData} />

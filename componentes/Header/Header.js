@@ -31,7 +31,6 @@ export default function HeaderScreen({ collapsed, setCollapsedCallback, pageName
     zIndex: 9999999999,
     width: '100%',
     borderBottom: '1px solid #f0f0f0',
-    // display: 'flex',
     alignItems: 'center',
     height: '80px'
   };
@@ -39,22 +38,22 @@ export default function HeaderScreen({ collapsed, setCollapsedCallback, pageName
 
   // Opções do menu de usuário
   const userMenu = (
-    <Menu>
+    <Menu style={{zIndex: 9999999999999}}>
       {!isAuthenticated && <>
-        <Menu.Item key="login">
+        <Menu.Item key="login" style={{zIndex: 9999999999999}}>
           <a href="/api/auth/signin">
             <LoginOutlined /> Login
           </a>
         </Menu.Item>
-        <Menu.Item key="login">
+        <Menu.Item key="cadastro" style={{zIndex: 9999999999999}}>
         <a href="/signup">
           <LoginOutlined /> Cadastrar
         </a>
       </Menu.Item>
       </>}
       {isAuthenticated && <>
-        <Menu.Item key="profile">
-          <a href="/profile">
+        <Menu.Item key="profile" style={{zIndex: 9999999999999}}>
+          <a href="/perfil">
             <UserOutlined /> Perfil
           </a>
         </Menu.Item>
@@ -88,10 +87,10 @@ export default function HeaderScreen({ collapsed, setCollapsedCallback, pageName
         </Col>
         <Row style={{paddingRight: '24px', gap: '8px', direction: 'revert', alignItems: 'center'}}>
           <Typography style={{color: 'white'}}>{(session && session?.user?.name) || 'Fazer Login'}</Typography>
-          <Dropdown overlay={userMenu} trigger={['click']}>
+          <Dropdown overlay={userMenu} trigger={['click']} overlayStyle={{ zIndex: 9999999999999 }}>
             <Button
               type="text"
-              icon={<Avatar size="small" color='white' icon={<UserOutlined />} />}
+              icon={<Avatar  size="small" color='white' icon={<UserOutlined />} />}
             />
           </Dropdown>
         </Row>
