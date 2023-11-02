@@ -52,7 +52,7 @@ const Home = () => {
           xl: 4,
           xxl: 6,
         }}
-        header={`${listaReceitas.length ? `${listaReceitas?.length} Receitas encontradas`: ''}`}
+        header={`${listaReceitas?.length ? `${listaReceitas?.length} Receitas encontradas`: ''}`}
         dataSource={listaReceitas}
         renderItem={(item) => (
           <List.Item >
@@ -80,7 +80,7 @@ const Home = () => {
             >
               <Meta
                 avatar={<Avatar >{item?.tempo_preparo} Min</Avatar>}
-                title={item.nome_receita}
+                title={item?.nome_receita}
                 description={`Categoria: ${listaCategorias?.find((cat) => cat?.cod_categoria === item?.cod_categoria)?.nome}` || ''}
               />
             </Card>
