@@ -3,6 +3,7 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials"
 import { UsuarioService } from "../../../services/Usuario";
+import { AuthUser } from "../../../services/AuthUser";
 import { config as dotenvConfig } from "dotenv";
 import { redirect } from "next/dist/server/api-utils";
 
@@ -18,22 +19,21 @@ export default NextAuth({
         password: {  label: "Senha",  type: "password" },
       },
       authorize: async (credentials) => {
-        // Faça a validação do usuário usando seu serviço de usuário
-        const usuarios = await UsuarioService.listAll();
-        const userAdapter = await usuarios.find(
-          (u) => u.email === credentials.email
-        );
+        const payload = {
+          email: credentials.email,
+          senha: credentials.password
+        }
+        const responseAuth = await AuthUser.create(payload);
 
-        
-        if (userAdapter && userAdapter.senha === credentials.password) {
+        if (responseAuth.statusCode === 200) {
           const user = {
-            id: userAdapter?.cod_usuario,
-            name: userAdapter?.nome || userAdapter?.email, // Use userAddapter instead of user
-            email: userAdapter?.email,
-            image: userAdapter?.foto_usuario || '',
+            id: responseAuth?.cod_usuario,
+            name: responseAuth?.nome || responseAuth?.email, // Use userAddapter instead of user
+            email: responseAuth?.email,
+            image: responseAuth?.foto_usuario || '',
             token: credentials?.csrfToken,
-            type: userAdapter?.tipo || '',
-            sub: userAdapter?.cod_usuario,
+            type: responseAuth?.tipo || '',
+            sub: responseAuth?.cod_usuario,
           }
           return Promise.resolve(user);
         } else {

@@ -109,7 +109,6 @@ const SignUp = ({ pageProps, usuarioData }) => {
         return
       }
       router.push('/api/auth/signin')
-
     }
   };
   
