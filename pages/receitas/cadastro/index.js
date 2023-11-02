@@ -122,9 +122,9 @@ const CadastroReceita = ({ receitaData, userIdServer, categoriaOptions, ingredie
   return (
     <PageContent headName={HEAD_NAME} pageName={PAGE_NAME}>
       <Form
-        labelCol={{ span: 12 }}
+        labelCol={{ span: 24 }}
         wrapperCol={{
-          span: 18,
+          span: 24,
         }}
         layout="vertical"
         form={form}
@@ -181,8 +181,8 @@ const CadastroReceita = ({ receitaData, userIdServer, categoriaOptions, ingredie
             }}
           >
               {fields.map(({ name, key }) => (
-                <Space key={key} >
-                  <Form.Item label="Ingredientes" name={[name, 'cod_ingrediente']} key={[key, 'cod_ingrediente']}>
+                <Space key={key}>
+                  <Form.Item style={{minWidth:'200px'}} label="Ingredientes" name={[name, 'cod_ingrediente']} key={[key, 'cod_ingrediente']}>
                     <Select>
                       {ingredientes?.map((option) => {
                         return (
@@ -197,6 +197,7 @@ const CadastroReceita = ({ receitaData, userIdServer, categoriaOptions, ingredie
                     name={[name, 'quantidade']}
                     key={[key, 'quantidade']}
                     label='Quantidade'
+                    style={{minWidth:'200px'}}
                   >
                     <Input />
                   </Form.Item>
@@ -204,6 +205,7 @@ const CadastroReceita = ({ receitaData, userIdServer, categoriaOptions, ingredie
                     name={[name, 'cod_un_medida']}
                     key={[key, 'cod_un_medida']}
                     label='Medidas'
+                    style={{minWidth:'200px'}}
                   >
                     <Select>
                       {medidas?.map((option) => (

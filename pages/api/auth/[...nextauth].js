@@ -26,14 +26,12 @@ export default NextAuth({
         const responseAuth = await AuthUser.create(payload);
 
         if (responseAuth.statusCode === 200) {
-          const user = {
-            id: responseAuth?.cod_usuario,
-            name: responseAuth?.nome || responseAuth?.email, // Use userAddapter instead of user
-            email: responseAuth?.email,
-            image: responseAuth?.foto_usuario || '',
+          console.log('responseAuth', responseAuth);
+          const user = await {
+            id: responseAuth?.data?.usuario?.cod_usuario,
+            name: responseAuth?.data?.usuario?.nome || responseAuth?.email, // Use userAddapter instead of user
+            email: responseAuth?.data?.usuario?.email,
             token: credentials?.csrfToken,
-            type: responseAuth?.tipo || '',
-            sub: responseAuth?.cod_usuario,
           }
           return Promise.resolve(user);
         } else {
