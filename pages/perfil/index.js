@@ -7,8 +7,9 @@ import { useRouter } from "next/router";
 import { ReceitaService } from "../../services/Receita"
 import { CategoriaService } from "../../services/Categoria"
 import { EditOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons';
-import { Card, Avatar, Button, List, Modal, Image, Flex, Divider, Row  } from 'antd';
+import { Card, Avatar, Button, List, Modal, Image, Flex, Divider, Row, Typography  } from 'antd';
 
+const { Title } = Typography;
 const { Meta } = Card;
 const PAGE_NAME = 'Perfil do usuário'
 const HEAD_NAME = 'Usuário'
@@ -32,14 +33,15 @@ const Profile = ({userDataServer, minhasReceitas, listaCategorias}) => {
 
   return (
     <PageContent headName={HEAD_NAME} pageName={PAGE_NAME}>
+      {/* <Title level={3}>Categoria: {categoriaData.nome}</Title> */}
       <Card 
-        style={{ height: 250 }}
+        style={{ height: `${user?.imageUrl ? '250px' : '57px'}` }}
         cover={user?.imageUrl ? <Image
           width="20%"
           height={ 150 }
           src={user?.imageUrl}
         /> : null} 
-        title={`${user.name} - Email: ${user.email}`} 
+        title={`${user.name}`} 
         extra={<a href={`/usuarios/${userDataServer.cod_usuario}`}>Editar Perfil</a>}
       />
       
@@ -51,10 +53,9 @@ const Profile = ({userDataServer, minhasReceitas, listaCategorias}) => {
       </Flex>
       <Divider />
       
-      
       <Row gutter={16}>
         <List
-          style={{marginTop: '-16px'}}
+          style={{marginTop: '-16px', width: '100%'}}
           grid={{
             gutter: 8,
             xs: 1,
