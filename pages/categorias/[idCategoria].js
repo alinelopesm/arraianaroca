@@ -35,7 +35,7 @@ const AlteracaoCategoria = ({categoria, receitasFilter}) => {
       
       <Row gutter={16}>
         <List
-          style={{marginTop: '-16px'}}
+          style={{marginTop: '-16px', width: '100%'}}
           grid={{
             gutter: 8,
             xs: 1,
