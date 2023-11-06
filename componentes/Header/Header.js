@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSession } from 'next-auth/react';
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -7,34 +8,27 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import { Layout, Button, Menu, Dropdown, Avatar, Row, Col, theme, Typography } from 'antd';
-import { useSession } from 'next-auth/react';
 
 const { Header } = Layout;
+const headerStyle = {
+  background: `url(/logoCompactoDark.png)`, // Defina a imagem do logo como plano de fundo
+  backgroundSize: '100% 80px', // Ajusta o tamanho da imagem para cobrir o cabeçalho
+  backgroundRepeat: 'no-repeat', // Não repete a imagem
+  backgroundPosition: 'center', // Centraliza a imagem
+  padding: 0,
+  position: 'sticky',
+  top: 0,
+  zIndex: 9999999999,
+  width: '100%',
+  borderBottom: '1px solid #f0f0f0',
+  alignItems: 'center',
+  height: '80px'
+};
 
 export default function HeaderScreen({ collapsed, setCollapsedCallback, pageName}) {
+  // Verifica se o usuário esta logado e existe sessão ativa
   const { data: session } = useSession();
-  const isAuthenticated = session ? true : false
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
-
-  const headerStyle = {
-    background: `url(/logoCompactoDark.png)`, // Defina a imagem do logo como plano de fundo
-    backgroundSize: '100% 80px', // Ajusta o tamanho da imagem para cobrir o cabeçalho
-    backgroundRepeat: 'no-repeat', // Não repete a imagem
-    backgroundPosition: 'center', // Centraliza a imagem
-
-    // O restante do seu estilo do cabeçalho permanece inalterado
-    padding: 0,
-    position: 'sticky',
-    top: 0,
-    zIndex: 9999999999,
-    width: '100%',
-    borderBottom: '1px solid #f0f0f0',
-    alignItems: 'center',
-    height: '80px'
-  };
-  
+  const isAuthenticated = session ? true : false;
 
   // Opções do menu de usuário
   const userMenu = (
@@ -99,6 +93,4 @@ export default function HeaderScreen({ collapsed, setCollapsedCallback, pageName
     </Header>
   );
 };
-
-// export default HeaderScreen;
 

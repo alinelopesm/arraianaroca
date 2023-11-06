@@ -41,7 +41,7 @@ const SideBar = ({ collapsed, isAuthenticated }) => {
     >
       <div className="demo-logo-vertical" />
       <Menu theme="light" mode="inline" defaultSelectedKeys={['1']}>
-        <Menu.Item key="home" icon={<HomeOutlined />} itemHoverBg='#ffffff'>
+        <Menu.Item key="home" icon={<HomeOutlined />} >
           <ActiveLink href="/">Home</ActiveLink>
         </Menu.Item>
         {isAuthenticated &&

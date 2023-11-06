@@ -14,7 +14,7 @@ export const Api = {
             console.error('Error:', error);
         });
     },
-    post(endPoint, data){
+    post(endPoint, data) {
         return fetch(`${url}${endPoint}`, {
             method: 'POST',
             headers: {
