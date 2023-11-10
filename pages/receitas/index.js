@@ -50,7 +50,7 @@ export default function Receitas() {
       
       <Row gutter={16}>
         <List
-          style={{marginTop: '-36px'}}
+          style={{marginTop: '-36px', width: `100%`}}
           grid={{
             gutter: 8,
             xs: 1,
@@ -60,11 +60,12 @@ export default function Receitas() {
             xl: 4,
             xxl: 3,
           }}
-          header={`${listaReceitas.length ? `${listaReceitas?.length} Receitas encontradas`: ''}`}
+          header={`${listaReceitas?.length ? `${listaReceitas?.length} Receitas encontradas`: ''}`}
           dataSource={listaReceitas}
           renderItem={(item) => (
-            <List.Item >
+            <List.Item style={{ width: `100%`}}>
               <Card
+              style={{ width: `100%`}}
                 hoverable={TYPE_USER !== 'admin'}// Defina a altura do Card
                 cover={
                   <img
