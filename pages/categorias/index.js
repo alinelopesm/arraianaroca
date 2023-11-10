@@ -50,7 +50,7 @@ export default function Categorias() {
                 xs={12} sm={8} md={6} lg={4}
                 style={{ marginBottom: '20px', width: '100%', height: '95%' }}
                 actions={isAuthenticated  && TYPE_USER === 'admin' ? [
-                  <EditOutlined key="edit" onClick={() => router.push(`/categorias/${categoria.cod_categoria}`)}/>, 
+                  <EditOutlined key="edit" onClick={() => router.push(`/categorias/cadastro/${categoria.cod_categoria}`)}/>, 
                   <EyeOutlined key="view" onClick={() => router.push(`/categorias/${categoria.cod_categoria}`)}/>
                 ]:[
                   <EyeOutlined key="view" onClick={() => router.push(`/categorias/${categoria.cod_categoria}`)}/>
