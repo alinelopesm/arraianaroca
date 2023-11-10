@@ -3,7 +3,7 @@ import PageContent from "../../componentes/PageContent/PageContent"
 import { MedidaService } from "../../services/Medida"
 import { Row, Col, Button, Card, Avatar } from "antd";
 import {
-  EditOutlined,
+  EditOutlined, DeleteOutlined
 } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import { useSession } from 'next-auth/react';
@@ -21,25 +21,32 @@ export default function Medidas() {
   const router = useRouter();
   const [listaMedidas, setListaMedidas] = useState([])
 
-  useEffect(() => {
-    async function getMedidas() {
-      const medidas = await MedidaService.listAll()
-      setListaMedidas(medidas)
-    }
+  async function getMedidas() {
+    const medidas = await MedidaService.listAll()
+    setListaMedidas(medidas)
+  }
 
+  useEffect(() => {
     getMedidas()
   })
 
+  async function removeItem(id) {
+    const response = await MedidaService.remove(id);
+    getMedidas()
+  }
+
   return (
     <PageContent headName={HEAD_NAME} pageName={PAGE_NAME} >
-      {isAuthenticated &&
-        <Button
-          style={{ position: 'fixed', right: '40px' }}
-          onClick={() => router.push('/medidas/cadastro')}
-        >
-          Cadastrar Nova Medida
-        </Button>
-      }
+      <Row gutter={16} justify='end'>
+        {isAuthenticated &&
+          <Button
+          style={{ background: '#1677ff', color: 'white', zIndex: 3 }}
+            onClick={() => router.push('/medidas/cadastro')}
+          >
+            Cadastrar Nova Medida
+          </Button>
+        }
+      </Row>
       <Row gutter={16} style={{ marginTop: '48px' }}>
         {listaMedidas.map((medida) => {
           return (
@@ -52,6 +59,7 @@ export default function Medidas() {
                     key="edit"
                     onClick={() => router.push(`/medidas/${medida.cod_un_medida}`)}
                   />,
+                  <DeleteOutlined style={{color: 'red'}} key="clouse" onClick={() => removeItem(medida.cod_un_medida)}/>
                 ]}
               >
                 <Card.Meta

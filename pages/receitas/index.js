@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useSession } from 'next-auth/react';
 import { Row, Button, Avatar, List, Card, Typography } from "antd";
-import { EditOutlined, EyeOutlined } from '@ant-design/icons';
+import { EditOutlined, EyeOutlined, DeleteOutlined } from '@ant-design/icons';
 import PageContent from "../../componentes/PageContent/PageContent";
 import { ReceitaService } from "../../services/Receita";
 import { CategoriaService } from "../../services/Categoria";
@@ -40,7 +40,7 @@ export default function Receitas() {
       <Row gutter={16} justify='end'>
         {isAuthenticated &&
           <Button
-            style={{background: '#d48806', color: 'white', zIndex: 3 }}
+            style={{ background: '#1677ff', color: 'white', zIndex: 3 }}
             onClick={() => router.push('/receitas/cadastro')}
           >
             Cadastrar Nova Receita
@@ -79,7 +79,8 @@ export default function Receitas() {
                 onClick={() => !isAuthenticated || TYPE_USER !== 'admin' ? router.push(`/receitas/${item?.cod_receita}`) : null}
                 actions={isAuthenticated  && (TYPE_USER === 'admin' || session?.user?.id === item.cod_usuario) ? [
                   <EditOutlined key="edit" onClick={() => router.push(`/receitas/cadastro/${item?.cod_receita}`)}/>, 
-                  <EyeOutlined key="view" onClick={() => router.push(`/receitas/${item?.cod_receita}`)}/>
+                  <EyeOutlined key="view" onClick={() => router.push(`/receitas/${item?.cod_receita}`)}/>,
+                  <DeleteOutlined key="clouse" onClick={() => router.push(`/receitas/${item?.cod_receita}`)}/>
                 ]: <EyeOutlined key="view" onClick={() => router.push(`/receitas/${item?.cod_receita}`)}/>}
                 size="small"
               >

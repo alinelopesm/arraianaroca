@@ -5,6 +5,7 @@ import { Row, Col, Button, Card, Avatar } from "antd";
 import {
   EditOutlined,
   PictureOutlined,
+  DeleteOutlined 
 } from "@ant-design/icons";
 import convertImage64 from '../../helpers/convertImage64';
 import AdminOnly from '../../componentes/PegeAlerts/NoAdmin';
@@ -22,14 +23,19 @@ export default function Usuario() {
   const isAuthenticated = session ? true : false;
   const [listaUsuarios, setListaUsuarios] = useState([]);
 
-  useEffect(() => {
-    async function getUsuarios() {
-      const usuarios = await UsuarioService.listAll();
-      setListaUsuarios(usuarios);
-    }
+  async function getUsuarios() {
+    const usuarios = await UsuarioService.listAll();
+    setListaUsuarios(usuarios);
+  }
 
+  useEffect(() => {
     getUsuarios()
   })
+
+  async function removeItem(id) {
+    const response = await UsuarioService.remove(id);
+    getUsuarios()
+  }
 
   return (
     <PageContent headName={HEAD_NAME} pageName={PAGE_NAME}>
@@ -54,6 +60,7 @@ export default function Usuario() {
                         key="edit"
                         onClick={() => router.push(`/usuarios/${usuario.cod_usuario}`)}
                       />,
+                      <DeleteOutlined style={{color: 'red'}} key="clouse" onClick={() => removeItem(usuario.cod_usuario)}/>
                     ]}
                   >
                     <div style={{ maxWidth: '100%', maxHeight: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

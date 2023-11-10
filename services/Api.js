@@ -45,8 +45,8 @@ export const Api = {
             console.error('Error:', error);
         });
     },
-    delete(endPoint){
-        return fetch(`${url}${endPoint}`, {
+    delete(endPoint, id){
+        return fetch(`${url}${endPoint}/${id}`, {
             method: 'DELETE',
         }).then(response => { 
             if (!response.ok) {
