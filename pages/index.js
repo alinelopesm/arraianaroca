@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useSession } from 'next-auth/react';
 import { useRouter } from "next/router";
 import { Card, List, Avatar } from 'antd';
-import { EditOutlined, EyeOutlined } from '@ant-design/icons';
+import { EditOutlined, EyeOutlined, DeleteOutlined  } from '@ant-design/icons';
 import { ReceitaService } from "../services/Receita";
 import { CategoriaService } from "../services/Categoria";
+import { IngredienteReceitaService } from '../services/IngredienteReceita'
 import PageContent from '../componentes/PageContent/PageContent';
 import convertImage64 from '../helpers/convertImage64';
 
@@ -23,20 +24,45 @@ const Home = () => {
   /*  Carrega lista de receitas */
   const [listaReceitas, setListaReceitas] = useState([]);
   const [listaCategorias, setlistaCategorias] = useState([]);
+
+  async function getReceitas() {
+    /**Busca Receitas */
+    const receitas = await ReceitaService.listAll();
+    setListaReceitas(receitas)
+  }
   
   useEffect(() => {
+    async function getCategorias() {
+      /**Busca Categorias */
+      const categorias = await CategoriaService.listAll();
+      setlistaCategorias(categorias);
+    }
+
     /*  Busca lista de receitas  ao carregar a tela*/
     async function getReceitas() {
       /**Busca Receitas */
       const receitas = await ReceitaService.listAll();
       setListaReceitas(receitas)
-
-      /**Busca Categorias */
-      const categorias = await CategoriaService.listAll();
-      setlistaCategorias(categorias);
     }
+    
+    getCategorias()
     getReceitas()
   })
+
+  async function removeItem(idReceita) {
+    const responseIngALL = await IngredienteReceitaService.listAll();
+    const ingredientes = responseIngALL.filter((item) => item.cod_receita == parseInt(idReceita)) || [];
+
+    if (ingredientes && ingredientes?.length > 0) { 
+      
+      await ingredientes.forEach(element => {
+        const responseIng = IngredienteReceitaService.remove(element.cod_ingred_receita);
+      });
+    }
+
+    const responseRec = await ReceitaService.remove(idReceita);
+    getReceitas();
+  }
 
   return (
     <PageContent headName={HEAD_NAME} pageName={PAGE_NAME} slider listas={listaCategorias}>
@@ -72,7 +98,8 @@ const Home = () => {
                 onClick={() => !isAuthenticated || TYPE_USER !== 'admin' ? router.push(`/receitas/${item?.cod_receita}`) : null}
                 actions={isAuthenticated  && TYPE_USER === 'admin' ? [
                   <EditOutlined key="edit" onClick={() => router.push(`/receitas/cadastro/${item?.cod_receita}`)}/>, 
-                  <EyeOutlined key="view" onClick={() => router.push(`/receitas/${item?.cod_receita}`)}/>
+                  <EyeOutlined key="view" onClick={() => router.push(`/receitas/${item?.cod_receita}`)}/>,
+                  <DeleteOutlined key="clouse" onClick={() => removeItem(item?.cod_receita)}/>
                 ]:[
                   <EyeOutlined key="view" onClick={() => router.push(`/receitas/${item?.cod_receita}`)}/>
                 ]}

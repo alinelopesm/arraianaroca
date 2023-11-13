@@ -6,6 +6,7 @@ import { EditOutlined, EyeOutlined, DeleteOutlined } from '@ant-design/icons';
 import PageContent from "../../componentes/PageContent/PageContent";
 import { ReceitaService } from "../../services/Receita";
 import { CategoriaService } from "../../services/Categoria";
+import { IngredienteReceitaService } from '../../services/IngredienteReceita'
 import convertImage64 from '../../helpers/convertImage64';
 
 const { Meta } = Card;
@@ -23,17 +24,32 @@ export default function Receitas() {
   const [listaReceitas, setListaReceitas] = useState([]);
   const [listaCategorias, setlistaCategorias] = useState([])
 
-  useEffect(() => {
-    async function getReceitas() {
-      const receitas = await ReceitaService.listAll();
-      setListaReceitas(receitas);
+  async function getReceitas() {
+    const receitas = await ReceitaService.listAll();
+    setListaReceitas(receitas);
 
-      const categorias = await CategoriaService.listAll();
-      setlistaCategorias(categorias);
-    }
-    
+    const categorias = await CategoriaService.listAll();
+    setlistaCategorias(categorias);
+  }
+
+  useEffect(() => {
     getReceitas();
   })
+
+  async function removeItem(idReceita) {
+    const responseIngALL = await IngredienteReceitaService.listAll();
+    const ingredientes = responseIngALL.filter((item) => item.cod_receita == parseInt(idReceita)) || [];
+
+    if (ingredientes && ingredientes?.length > 0) { 
+      
+      await ingredientes.forEach(element => {
+        const responseIng = IngredienteReceitaService.remove(element.cod_ingred_receita);
+      });
+    }
+
+    const responseRec = await ReceitaService.remove(idReceita);
+    getReceitas();
+  }
 
   return (
     <PageContent headName={HEAD_NAME} pageName={PAGE_NAME} >
@@ -81,7 +97,7 @@ export default function Receitas() {
                 actions={isAuthenticated  && (TYPE_USER === 'admin' || session?.user?.id === item.cod_usuario) ? [
                   <EditOutlined key="edit" onClick={() => router.push(`/receitas/cadastro/${item?.cod_receita}`)}/>, 
                   <EyeOutlined key="view" onClick={() => router.push(`/receitas/${item?.cod_receita}`)}/>,
-                  <DeleteOutlined key="clouse" onClick={() => router.push(`/receitas/${item?.cod_receita}`)}/>
+                  <DeleteOutlined key="clouse" onClick={() => removeItem(item?.cod_receita)}/>
                 ]: <EyeOutlined key="view" onClick={() => router.push(`/receitas/${item?.cod_receita}`)}/>}
                 size="small"
               >
