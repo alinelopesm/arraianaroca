@@ -44,11 +44,11 @@ const ViewAlteracaoReceita = ({ receita, ingredientes, userIdServer, categoriaOp
             <List
               dataSource={receitaData?.items}
               renderItem={(item) => {
-                const medida = medidasOptions?.find((medida) => medida?.value === item?.cod_un_medida).label
-                const ingrediente = ingredientesOptions?.find((ingred) => ingred?.value === item?.cod_ingrediente).label
-              return <List.Item>
+                const medida = medidasOptions?.filter((medida) => medida?.value === item?.cod_un_medida)
+                const ingrediente = ingredientesOptions?.filter((ingred) => ingred?.value === item?.cod_ingrediente)
+              return <List.Item key={item.cod_ingred_receita}>
                   <Text>
-                    {item?.quantidade} - {medida} de : <b>{ingrediente}</b>
+                    {item?.quantidade} - {medida && medida[0]?.label} de : <b>{ingrediente && ingrediente[0]?.label}</b>
                   </Text>
                 </List.Item>
               }}
