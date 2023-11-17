@@ -46,6 +46,7 @@ export default NextAuth({
     encryptionKey: process.env.JWT_ENCRYPTION_PRIVATE_KEY,
     secret: process.env.NEXTAUTH_SECRET,
   },
+  secret: process.env.NEXTAUTH_SECRET, // Adicione o secret aqui
   callbacks: {
     async session({ session, token, user }) {
       session.token = token;
