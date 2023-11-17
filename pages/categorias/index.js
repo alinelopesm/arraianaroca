@@ -5,7 +5,8 @@ import { Row, Col, Button, Card, Avatar } from "antd";
 import {
   EditOutlined,
   PictureOutlined,
-  EyeOutlined 
+  EyeOutlined,
+  DeleteOutlined 
 } from "@ant-design/icons";
 import convertImage64 from '../../helpers/convertImage64';
 import { useRouter } from "next/router";
@@ -23,24 +24,32 @@ export default function Categorias() {
   const router = useRouter();
   const [listaCategorias, setListaCategorias] = useState([]);
 
+  async function getCategorias() {
+    const categorias = await CategoriaService.listAll();
+    setListaCategorias(categorias);
+  }
+
   useEffect(() => {
-    async function getCategorias() {
-      const categorias = await CategoriaService.listAll();
-      setListaCategorias(categorias);
-    }
     getCategorias();
   }, []);
 
+  async function removeItem(id) {
+    const response = await CategoriaService.remove(id);
+    getCategorias()
+  }
+
   return (
     <PageContent headName={HEAD_NAME} pageName={PAGE_NAME}>
-      {isAuthenticated  && TYPE_USER === 'admin' &&
-        <Button
-          style={{ position: 'fixed', right: '40px' }}
-          onClick={() => router.push('/categorias/cadastro')}
-        >
-          Cadastrar Nova Categoria
-        </Button>
-      }
+      <Row gutter={16} justify='end'>
+        {isAuthenticated && TYPE_USER === 'admin' &&
+          <Button
+            style={{ background: '#1677ff', color: 'white', zIndex: 3 }}
+            onClick={() => router.push('/categorias/cadastro')}
+          >
+            Cadastrar Nova Categoria
+          </Button>
+        }
+      </Row>
       <Row gutter={16} style={{ marginTop: '48px' }}>
         {listaCategorias.map((categoria) => {
           const imagePath = categoria?.foto_categoria ? convertImage64(categoria?.foto_categoria) : '';
@@ -50,8 +59,9 @@ export default function Categorias() {
                 xs={12} sm={8} md={6} lg={4}
                 style={{ marginBottom: '20px', width: '100%', height: '95%' }}
                 actions={isAuthenticated  && TYPE_USER === 'admin' ? [
-                  <EditOutlined key="edit" onClick={() => router.push(`/categorias/${categoria.cod_categoria}`)}/>, 
-                  <EyeOutlined key="view" onClick={() => router.push(`/categorias/${categoria.cod_categoria}`)}/>
+                  <EditOutlined key="edit" onClick={() => router.push(`/categorias/cadastro/${categoria.cod_categoria}`)}/>, 
+                  <EyeOutlined key="view" onClick={() => router.push(`/categorias/${categoria.cod_categoria}`)}/>,
+                  <DeleteOutlined key="clouse" onClick={() => removeItem(categoria.cod_categoria)}/>
                 ]:[
                   <EyeOutlined key="view" onClick={() => router.push(`/categorias/${categoria.cod_categoria}`)}/>
                 ]}

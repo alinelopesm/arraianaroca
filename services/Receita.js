@@ -16,6 +16,6 @@ export const ReceitaService = {
         return Api.put(endPoint, payload, id)
     },
     remove(id){
-        return Api.get(`${endPoint}?id=${id}`)
+        return Api.delete(endPoint, id)
     }
 }

@@ -15,7 +15,7 @@ export const CategoriaService = {
     update(payload, id){
         return Api.put(endPoint, payload, id)
     },
-    remove(id){
-        return Api.get(`${endPoint}?id=${id}`)
+    remove(id){ 
+        return Api.delete(endPoint, id)
     }
 }

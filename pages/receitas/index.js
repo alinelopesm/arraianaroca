@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useSession } from 'next-auth/react';
 import { Row, Button, Avatar, List, Card, Typography } from "antd";
-import { EditOutlined, EyeOutlined } from '@ant-design/icons';
+import { EditOutlined, EyeOutlined, DeleteOutlined } from '@ant-design/icons';
 import PageContent from "../../componentes/PageContent/PageContent";
 import { ReceitaService } from "../../services/Receita";
 import { CategoriaService } from "../../services/Categoria";
+import { IngredienteReceitaService } from '../../services/IngredienteReceita'
 import convertImage64 from '../../helpers/convertImage64';
 
 const { Meta } = Card;
@@ -23,24 +24,39 @@ export default function Receitas() {
   const [listaReceitas, setListaReceitas] = useState([]);
   const [listaCategorias, setlistaCategorias] = useState([])
 
-  useEffect(() => {
-    async function getReceitas() {
-      const receitas = await ReceitaService.listAll();
-      setListaReceitas(receitas);
+  async function getReceitas() {
+    const receitas = await ReceitaService.listAll();
+    setListaReceitas(receitas);
 
-      const categorias = await CategoriaService.listAll();
-      setlistaCategorias(categorias);
-    }
-    
+    const categorias = await CategoriaService.listAll();
+    setlistaCategorias(categorias);
+  }
+
+  useEffect(() => {
     getReceitas();
   })
+
+  async function removeItem(idReceita) {
+    const responseIngALL = await IngredienteReceitaService.listAll();
+    const ingredientes = responseIngALL.filter((item) => item.cod_receita == parseInt(idReceita)) || [];
+
+    if (ingredientes && ingredientes?.length > 0) { 
+      
+      await ingredientes.forEach(element => {
+        const responseIng = IngredienteReceitaService.remove(element.cod_ingred_receita);
+      });
+    }
+
+    const responseRec = await ReceitaService.remove(idReceita);
+    getReceitas();
+  }
 
   return (
     <PageContent headName={HEAD_NAME} pageName={PAGE_NAME} >
       <Row gutter={16} justify='end'>
         {isAuthenticated &&
           <Button
-            style={{background: '#d48806', color: 'white', zIndex: 3 }}
+            style={{ background: '#1677ff', color: 'white', zIndex: 3 }}
             onClick={() => router.push('/receitas/cadastro')}
           >
             Cadastrar Nova Receita
@@ -50,7 +66,7 @@ export default function Receitas() {
       
       <Row gutter={16}>
         <List
-          style={{marginTop: '-36px'}}
+          style={{marginTop: '-36px', width: `100%`}}
           grid={{
             gutter: 8,
             xs: 1,
@@ -60,11 +76,12 @@ export default function Receitas() {
             xl: 4,
             xxl: 3,
           }}
-          header={`${listaReceitas.length ? `${listaReceitas?.length} Receitas encontradas`: ''}`}
+          header={`${listaReceitas?.length ? `${listaReceitas?.length} Receitas encontradas`: ''}`}
           dataSource={listaReceitas}
           renderItem={(item) => (
-            <List.Item >
+            <List.Item style={{ width: `100%`}}>
               <Card
+              style={{ width: `100%`}}
                 hoverable={TYPE_USER !== 'admin'}// Defina a altura do Card
                 cover={
                   <img
@@ -79,7 +96,8 @@ export default function Receitas() {
                 onClick={() => !isAuthenticated || TYPE_USER !== 'admin' ? router.push(`/receitas/${item?.cod_receita}`) : null}
                 actions={isAuthenticated  && (TYPE_USER === 'admin' || session?.user?.id === item.cod_usuario) ? [
                   <EditOutlined key="edit" onClick={() => router.push(`/receitas/cadastro/${item?.cod_receita}`)}/>, 
-                  <EyeOutlined key="view" onClick={() => router.push(`/receitas/${item?.cod_receita}`)}/>
+                  <EyeOutlined key="view" onClick={() => router.push(`/receitas/${item?.cod_receita}`)}/>,
+                  <DeleteOutlined key="clouse" onClick={() => removeItem(item?.cod_receita)}/>
                 ]: <EyeOutlined key="view" onClick={() => router.push(`/receitas/${item?.cod_receita}`)}/>}
                 size="small"
               >

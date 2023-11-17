@@ -1,7 +1,7 @@
 import React from 'react';
 import { CategoriaService } from "../../../services/Categoria"
 import convertImage64 from '../../../helpers/convertImage64'
-import CadastroCategoria from './cadastro';
+import CadastroCategoria from './index';
 import Router, { useRouter } from 'next/router';
 
 const method = 'editar'

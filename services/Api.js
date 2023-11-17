@@ -1,4 +1,6 @@
-const url = 'http://localhost:8000/'
+const API_URL= process.env.NEXT_API_URL ;
+// const url = 'http://localhost:8000/'
+const url = API_URL
 export const Api = {
     getById(endPoint, id) {
         return fetch(`${url}${endPoint}/${id}`).then(response => response.json())
@@ -45,8 +47,8 @@ export const Api = {
             console.error('Error:', error);
         });
     },
-    delete(endPoint){
-        return fetch(`${url}${endPoint}`, {
+    delete(endPoint, id){
+        return fetch(`${url}${endPoint}/${id}`, {
             method: 'DELETE',
         }).then(response => { 
             if (!response.ok) {

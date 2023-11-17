@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import PageContent from "../../componentes/PageContent/PageContent";
 import { Row, Col, Button, Card, Avatar } from "antd";
 import {
-  EditOutlined,
+  EditOutlined, DeleteOutlined
 } from "@ant-design/icons";
 import { IngredienteService } from "../../services/Ingrediente"
 import { useRouter } from "next/router";
@@ -20,25 +20,32 @@ export default function Ingredientes() {
   const router = useRouter();
   const [listaIngredientes, setListaIngredientes] = useState([])
 
-  useEffect(() => {
-    async function getIngredientes() {
-      const ingredientes = await IngredienteService.listAll()
-      setListaIngredientes(ingredientes)
-    }
+  async function getIngredientes() {
+    const ingredientes = await IngredienteService.listAll()
+    setListaIngredientes(ingredientes)
+  }
 
+  useEffect(() => {
     getIngredientes()
   })
 
+  async function removeItem(id) {
+    const response = await IngredienteService.remove(id);
+    getIngredientes()
+  }
+
   return (
     <PageContent headName={HEAD_NAME} pageName={PAGE_NAME}>
-      {isAuthenticated &&
-        <Button
-          style={{ position: 'fixed', right: '40px' }}
-          onClick={() => router.push('/ingredientes/cadastro')}
-        >
-          Cadastrar Ingrediente
-        </Button>
-      }
+      <Row gutter={16} justify='end'>
+        {isAuthenticated &&
+          <Button
+            style={{ background: '#1677ff', color: 'white', zIndex: 3  }}
+            onClick={() => router.push('/ingredientes/cadastro')}
+          >
+            Cadastrar Ingrediente
+          </Button>
+        }
+      </Row>
       <Row gutter={16} style={{ marginTop: '48px' }}>
         {listaIngredientes.map((ingrediente) => {
           return (
@@ -49,8 +56,10 @@ export default function Ingredientes() {
                 actions={isAuthenticated && [
                   <EditOutlined
                     key="edit"
+                    style={{color: 'blue'}}
                     onClick={() => router.push(`/ingredientes/${ingrediente.cod_ingrediente}`)}
                   />,
+                  <DeleteOutlined style={{color: 'red'}} key="clouse" onClick={() => removeItem(ingrediente.cod_ingrediente)}/>
                 ]}
               >
                 <Card.Meta

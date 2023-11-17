@@ -12,6 +12,7 @@ import {
 import { UsuarioService } from "../../services/Usuario"
 import PageContent from '../../componentes/PageContent/PageContent';
 import { useRouter } from "next/router";
+import { useSession } from 'next-auth/react';
 
 const PAGE_NAME = 'Cadastro de usuário'
 const HEAD_NAME = 'Usuário'
@@ -57,6 +58,9 @@ const tailFormItemLayout = {
   },
 };
 const SignUp = ({ pageProps, usuarioData }) => {
+  const { data: session } = useSession();
+  const isAuthenticated = session ? true : false;
+
   const router = useRouter();
   const [form] = Form.useForm();
 
@@ -104,10 +108,10 @@ const SignUp = ({ pageProps, usuarioData }) => {
 
     const cadastroUser = await UsuarioService.create(payload)
     if (cadastroUser) {
-      if (TYPE_USER === 'admin') {
+      if (isAuthenticated && TYPE_USER === 'admin') {
         router.push('/usuarios')
         return
-      }
+      } 
       router.push('/api/auth/signin')
     }
   };
