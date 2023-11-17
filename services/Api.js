@@ -1,6 +1,10 @@
-const API_URL= process.env.NEXT_API_URL ;
-// const url = 'http://localhost:8000/'
-const url = API_URL
+// import { config as dotenvConfig } from "dotenv";
+// dotenvConfig()
+
+// const API_URL= process.env.NEXT_API_URL;
+// const url = API_URL
+const url = 'http://localhost:8000/'
+
 export const Api = {
     getById(endPoint, id) {
         return fetch(`${url}${endPoint}/${id}`).then(response => response.json())
