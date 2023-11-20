@@ -155,7 +155,7 @@ const CadastroReceita = ({ receitaData, userIdServer, categoriaOptions, ingredie
           <Input />
         </Form.Item>
         <Form.Item
-          label="Tempo preparo"
+          label="Tempo preparo (minutos)"
           name="tempo_preparo"
           initialValue={dataReceita?.tempo_preparo}
         >
