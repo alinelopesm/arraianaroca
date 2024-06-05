@@ -1,0 +1,62 @@
+.carouselContainer {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  width: 100%;
+}
+
+.carouselWrapper {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  width: calc(100% * 6); /* Supondo que temos 4 itens no carrossel */
+}
+
+.carouselItem {
+  flex: 1 0 50%;
+  box-sizing: border-box;
+  padding: 0 10px;
+  max-width: 50%;
+}
+
+.carouselImage {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.carouselButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.prev {
+  left: 10px;
+}
+
+.next {
+  right: 10px;
+}
+
+@media (min-width: 600px) {
+  .carouselItem {
+    flex: 1 0 50%;
+    max-width: 50%;
+  }
+
+  .carouselWrapper {
+    width: calc(100% * 2); /* Duas imagens visíveis */
+  }
+}
+
+@media (min-width: 960px) {
+  .carouselItem {
+    flex: 1 0 33.33%;
+    max-width: 33.33%;
+  }
+
+  .carouselWrapper {
+    width: calc(100% * 1.5); /* Três imagens visíveis */
+  }
+}

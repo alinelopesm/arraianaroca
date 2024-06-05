@@ -24,3 +24,15 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.respons {
+  color: '#8B4320';
+  text-shadow: '5px 2px 4px rgba(0, 0, 0, 0.2)';
+  font-weight: 'bold';
+}
+
+@media (max-width:600px) {
+  .respons {
+      display: none;
+  }
+} 
