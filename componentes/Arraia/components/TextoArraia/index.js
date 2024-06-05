@@ -65,29 +65,6 @@ const TextArraia = () => {
           Garanta já o seu ingresso! Eles estão à venda no link aqui na pagina. Os ingressos são limitados, então corra e não fique de fora!
         </Typography>
       </article>
-
-      {!isMobile &&
-        <footer className={styles.footer}>
-          <Typography variant="body1" component="p">
-            Traga sua família e amigos para celebrar essa noite mágica conosco! Vamos juntos fazer um arraiá inesquecível!
-          </Typography>
-          <Typography variant="body1" component="p">
-            📅 <strong>Data:</strong> 29/06/2024 (Sábado)
-          </Typography>
-          <Typography variant="body1" component="p">
-            📍 <strong>Local:</strong> [Nome do Local] - [Endereço]
-          </Typography>
-          <Typography variant="body1" component="p">
-            🕢 <strong>Horário:</strong> A partir das 18h
-          </Typography>
-          <Typography variant="body1" component="p">
-            Para mais informações, siga nossas redes sociais ou entre em contato pelo telefone [número do telefone].
-          </Typography>
-          <Typography variant="body1" component="p">
-            Viva São João! Esperamos por você! 🌟🎉🌽🎶
-          </Typography>
-        </footer>
-}
     </div>
   );
 };
